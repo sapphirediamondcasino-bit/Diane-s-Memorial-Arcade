@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playing Game | Diane Keaton Memorial Arcade</title>
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --dark-bg: #050510;
+            --darker: #020208;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(0, 243, 255, 0.05) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, rgba(0, 243, 255, 0.05) 50%, transparent 51%);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .top-bar {
+            background: rgba(5, 5, 16, 0.98);
+            backdrop-filter: blur(30px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--neon-blue);
+            box-shadow: 0 5px 40px rgba(0, 243, 255, 0.4);
+            z-index: 1000;
+            position: sticky;
+            top: 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 30px var(--neon-blue);
+            letter-spacing: 2px;
+        }
+        
+        .back-btn {
+            font-family: 'Orbitron', sans-serif;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 900;
+            font-size: 0.9em;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            box-shadow: 0 0 25px var(--neon-purple);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .back-btn:hover {
+            box-shadow: 0 0 50px var(--neon-purple);
+            transform: scale(1.05);
+        }
+        
+        /* FULLSCREEN GAME CONTAINER */
+        .game-container {
+            width: 100%;
+            height: calc(100vh - 70px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            position: relative;
+            background: #000;
+        }
+        
+        #game {
+            width: 100%;
+            height: 100%;
+            border: 4px solid var(--neon-blue);
+            border-radius: 10px;
+            box-shadow: 
+                0 0 60px rgba(0, 243, 255, 0.6),
+                inset 0 0 60px rgba(0, 243, 255, 0.1);
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Make Ruffle player fill container */
+        #game ruffle-player {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+        }
+        
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 6px solid rgba(0, 243, 255, 0.2);
+            border-top: 6px solid var(--neon-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+            box-shadow: 0 0 40px var(--neon-blue);
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 30px var(--neon-blue);
+            letter-spacing: 3px;
+            animation: pulse 2s ease infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1; 
+                text-shadow: 0 0 30px var(--neon-blue);
+            }
+            50% { 
+                opacity: 0.6; 
+                text-shadow: 0 0 60px var(--neon-blue), 0 0 90px var(--neon-purple);
+            }
+        }
+        
+        .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(5, 5, 16, 0.98);
+            border: 3px solid var(--neon-pink);
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            max-width: 700px;
+            box-shadow: 0 0 60px var(--neon-pink);
+            display: none;
+            z-index: 200;
+        }
+        
+        .error-diane-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid var(--neon-pink);
+            margin: 0 auto 30px;
+            box-shadow: 0 0 40px var(--neon-pink);
+            object-fit: cover;
+        }
+        
+        .error-message h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-pink);
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            text-shadow: 0 0 30px var(--neon-pink);
+        }
+        
+        .error-message p {
+            font-size: 1.3em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .error-message .sorry-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            color: var(--neon-blue);
+            font-style: italic;
+            margin: 20px 0;
+            text-shadow: 0 0 20px var(--neon-blue);
+        }
+        
+        .report-btn {
+            font-family: 'Orbitron', sans-serif;
+            margin: 10px;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 900;
+            font-size: 1.1em;
+            cursor: pointer;
+            letter-spacing: 2px;
+            box-shadow: 0 0 30px var(--neon-pink);
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .report-btn:hover {
+            box-shadow: 0 0 50px var(--neon-pink);
+            transform: scale(1.05);
+        }
+        
+        .try-again-btn {
+            font-family: 'Orbitron', sans-serif;
+            margin: 10px;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 900;
+            font-size: 1.1em;
+            cursor: pointer;
+            letter-spacing: 2px;
+            box-shadow: 0 0 30px var(--neon-blue);
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .try-again-btn:hover {
+            box-shadow: 0 0 50px var(--neon-blue);
+            transform: scale(1.05);
+        }
+        
+        /* EMBED CODE SECTION */
+        .embed-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .embed-container {
+            background: rgba(5, 5, 16, 0.9);
+            border: 3px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.3);
+        }
+        
+        .embed-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 15px;
+            color: var(--neon-blue);
+            text-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        .embed-subtitle {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .embed-input-group {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid var(--neon-purple);
+            margin-bottom: 20px;
+        }
+        
+        .embed-label {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-purple);
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 700;
+        }
+        
+        .embed-input-wrapper {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .embed-input {
+            flex: 1;
+            min-width: 250px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-family: 'Roboto', monospace;
+            font-size: 0.95em;
+            padding: 15px;
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        .embed-input:focus {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px rgba(191, 0, 255, 0.5);
+        }
+        
+        .copy-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px var(--neon-blue);
+            font-size: 1em;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        
+        .copy-btn:hover {
+            box-shadow: 0 0 40px var(--neon-blue);
+            transform: scale(1.05);
+        }
+        
+        .copy-btn.copied {
+            background: var(--neon-green) !important;
+            box-shadow: 0 0 30px var(--neon-green) !important;
+        }
+        
+        .embed-preview {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 2px solid var(--neon-green);
+        }
+        
+        .embed-preview h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-green);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .embed-preview ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .embed-preview li {
+            padding: 8px 0;
+            opacity: 0.9;
+        }
+        
+        .embed-preview li::before {
+            content: '✅ ';
+            color: var(--neon-green);
+        }
+        
+        /* RECOMMENDED SECTION */
+        .recommended-section {
+            max-width: 1600px;
+            margin: 60px auto 40px;
+            padding: 0 20px;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .recommended-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .recommended-card {
+            background: rgba(5, 5, 16, 0.85);
+            border: 2px solid var(--neon-blue);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .recommended-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0, 243, 255, 0.4);
+        }
+        
+        .recommended-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--neon-blue);
+        }
+        
+        .recommended-content {
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .recommended-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1em;
+            font-weight: 900;
+            color: var(--neon-blue);
+            margin-bottom: 8px;
+        }
+        
+        .recommended-card p {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 10px 15px;
+            }
+            .game-title {
+                font-size: 1.2em;
+            }
+            .game-container {
+                height: calc(100vh - 100px);
+            }
+            .embed-input-wrapper {
+                flex-direction: column;
+            }
+            .copy-btn {
+                width: 100%;
+            }
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            padding: 80px 40px;
+            background: var(--darker);
+            border-top: 4px solid var(--neon-blue);
+            text-align: center;
+        }
+        
+        .footer h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: var(--neon-blue);
+            margin-bottom: 25px;
+            text-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        .footer p {
+            font-size: 1.1em;
+            margin: 15px 0;
+            opacity: 0.8;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        .footer-link:hover {
+            color: var(--neon-purple);
+            text-shadow: 0 0 15px var(--neon-purple);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="game-title" id="game-title">LOADING GAME...</div>
+        <a href="index.html" class="back-btn">← BACK</a>
+    </div>
+    
+    <div class="game-container">
+        <div id="loading">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">LOADING GAME...</div>
+        </div>
+        
+        <div id="game"></div>
+        
+        <div class="error-message" id="error-msg">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Diane_Keaton_by_Gage_Skidmore_2.jpg/800px-Diane_Keaton_by_Gage_Skidmore_2.jpg" 
+                 alt="Diane Keaton" 
+                 class="error-diane-image"
+                 onerror="this.src='https://via.placeholder.com/200/bf00ff/ffffff?text=DK'">
+            <h2>⚠️ OH DEAR...</h2>
+            <p class="sorry-text">"Sorry Honey, this game isn't working right now"</p>
+            <p>The game file couldn't be loaded. It might be missing or temporarily unavailable.</p>
+            <p style="font-size: 0.95em; opacity: 0.8; margin-top: 20px;">
+                Game: <strong id="error-game-name">Unknown</strong><br>
+                Error: Flash SWF file failed to load
+            </p>
+            <div style="margin-top: 30px;">
+                <button class="report-btn" onclick="reportBrokenGame()">🚨 REPORT BROKEN GAME</button>
+                <button class="try-again-btn" onclick="location.reload()">🔄 TRY AGAIN</button>
+                <a href="index.html" class="try-again-btn">← BACK TO ARCADE</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DIANE BOT RECOMMENDATIONS -->
+    <div class="embed-section">
+        <div class="embed-container">
+            <h2 class="embed-title">🤖 DIANE BOT RECOMMENDATIONS</h2>
+            <p class="embed-subtitle">
+                Share this game on Discord with Diane Bot!
+            </p>
+            
+            <div class="embed-input-group">
+                <label class="embed-label">🎮 Discord Bot Command:</label>
+                <div class="embed-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="discord-command" 
+                        class="embed-input" 
+                        readonly
+                    >
+                    <button class="copy-btn" onclick="copyDiscordCommand()">
+                        📋 COPY COMMAND
+                    </button>
+                </div>
+            </div>
+            
+            <div class="embed-preview">
+                <h3>✨ Diane Bot Suggests You Play Next:</h3>
+                <div id="bot-recommendations" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- RECOMMENDED GAMES -->
+    <div class="recommended-section">
+        <h2 class="section-title">🎮 PLAY NEXT</h2>
+        <div class="recommended-grid" id="recommended-games"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <h3>IN MEMORY OF DIANE KEATON</h3>
+        <p>January 5, 1946 - October 11, 2025 Forever in Our Hearts</p>
+        <p>Academy Award Winner • Director • Fashion Icon • Legend</p>
+        <p style="margin-top: 30px; font-size: 1.1em; max-width: 800px; margin-left: auto; margin-right: auto;">
+            "This bot honors Diane's passion for learning, teaching, and bringing joy to others.<br>
+            Through AI-powered education and classic gaming, her spirit of curiosity and fun lives on."
+        </p>
+
+        <div class="footer-links">
+            <a href="index.html#games" class="footer-link">GAMES</a>
+            <a href="achievements.html" class="footer-link">ACHIEVEMENTS</a>
+            <a href="leaderboard.html" class="footer-link">LEADERBOARD</a>
+            <a href="profile.html" class="footer-link">PROFILE</a>
+            <a href="https://discord.gg/jR8tcWF" class="footer-link" target="_blank">Game Killer Studios</a>
+        </div>
+
+        <p style="margin-top: 40px; font-size: 0.9em; opacity: 0.6;">
+            © 2025 Diane Keaton Memorial Arcade • Powered by AI & Love<br>
+            Self-Learning AI • Educational Tool • Classic Game Preservation<br>
+            Created with ❤️ by Game Killers Studio™
+        </p>
+    </div>
+    
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameName = urlParams.get('game');
+        const siteBaseURL = 'https://sapphirediamondcasino-bit.github.io/Diane-s-Arcade';
+        
+        const games = {
+            'motherload': { name: 'MOTHERLOAD', file: '1269 - MotherLoad.swf', image: 'https://archive.org/serve/motherload_202209/motherload_202209_screenshot.gif', desc: 'Dig deep for Martian minerals!', related: ['earntodie', 'gold01', 'raftwars'] },
+            'happywheels': { name: 'HAPPY WHEELS', file: 'HappyWheels.swf', image: 'https://archive.org/serve/billiardss/00_A.png', desc: 'Ragdoll physics mayhem!', related: ['earntodie', 'robotunicornattack', 'ruahm'] },
+            'gunblood': { name: 'GUN BLOOD', file: 'gunblood.swf', image: 'https://archive.org/download/gun-blood-flash-game/gunblood-menu.png', desc: 'Quick-draw western duels!', related: ['bushshootout', 'raftwars', 'raftwars2'] },
+            'raftwars': { name: 'RAFT WARS', file: 'raftwars.swf', image: 'https://archive.org/serve/raft-wars_202207/raft-wars_202207_screenshot.gif', desc: 'Defend your treasure!', related: ['raftwars2', 'gunblood', 'gold01'] },
+            'raftwars2': { name: 'RAFT WARS 2', file: 'raftwars2.swf', image: 'https://archive.org/serve/miniclip_raft_wars_2/miniclip_raft_wars_2_screenshot.gif', desc: 'More raft battles!', related: ['raftwars', 'gunblood', 'motherload'] },
+            'robotunicornattack': { name: 'ROBOT UNICORN ATTACK', file: 'robotunicornattack_flash.swf', image: 'https://archive.org/serve/robotunicornattack_flash/RobotUnicornAttack_screenshot.jpg', desc: 'Chase your dreams!', related: ['ruahm', 'retrounicornattack', 'happywheels'] },
+            'ruahm': { name: 'ROBOT UNICORN HEAVY METAL', file: 'ruahm.swf', image: 'https://archive.org/serve/ruahm/ruahm_screenshot.gif', desc: 'Heavy metal edition!', related: ['robotunicornattack', 'happywheels', 'earntodie'] },
+            'retrounicornattack': { name: 'RETRO UNICORN ATTACK', file: 'Retrounicornattack.swf', image: 'https://archive.org/serve/robot_unicorn_attack/robot_unicorn_attack_screenshot.gif', desc: 'Classic unicorn runner!', related: ['robotunicornattack', 'ruahm', 'happywheels'] },
+            'earntodie': { name: 'EARN TO DIE', file: 'EarnToDie_NotDoppler_dec.swf', image: 'https://archive.org/serve/etd_20220311/etd_20220311_screenshot.gif', desc: 'Drive through zombies!', related: ['earntodie2012', 'EarntoDie2016', 'EarntoDiePart2'] },
+            'earntodie2012': { name: 'EARN TO DIE 2012', file: 'earn-to-die-2012.swf', image: 'https://archive.org/serve/earntodie2012/earntodie2012_screenshot.gif', desc: 'Zombie roadkill 2012!', related: ['earntodie', 'EarntoDie2016', 'EarntoDiePart2'] },
+            'EarntoDie2016': { name: 'EARN TO DIE 2016', file: 'Earn to Die 2016.swf', image: 'https://archive.org/serve/earntodie2016/earntodie2016_screenshot.gif', desc: 'Apocalypse 2016!', related: ['earntodie', 'earntodie2012', 'EarntoDiePart2'] },
+            'EarntoDiePart2': { name: 'EARN TO DIE PART 2', file: 'Earn to Die Part 2.swf', image: 'https://archive.org/serve/earntodiepart2/earntodiepart2_screenshot.gif', desc: 'Ultimate sequel!', related: ['earntodie', 'earntodie2012', 'EarntoDie2016'] },
+            'bushshootout': { name: 'BUSH SHOOTOUT', file: '1452__bushshootout_game.swf', image: 'https://i.ytimg.com/vi/ykZC9y5R5TY/maxresdefault.jpg', desc: 'Retro political shooter!', related: ['gunblood', 'raftwars', 'tomandjerrybowling'] },
+            'candymachine': { name: 'CANDY MACHINE DELUXE', file: 'flash_candymachinedeluxe.swf', image: 'https://archive.org/serve/flash_candymachinedeluxe/flash_candymachinedeluxe_screenshot.png', desc: 'Sweet puzzle fun!', related: ['jawbreaker', 'gold01', 'tomandjerrybowling'] },
+            'jawbreaker': { name: 'JAWBREAKER', file: 'jawbreaker.swf', image: 'https://archive.org/serve/miniclip_jawbreaker/miniclip_jawbreaker_screenshot.gif', desc: 'Candy smashing action!', related: ['candymachine', 'gold01', 'tomandjerrybowling'] },
+            'gold01': { name: 'GOLD MINER', file: 'gold01.swf', image: 'https://img.gamepix.com/games/gold-miner/cover/gold-miner.png?width=600&height=340&fit=cover', desc: 'Grab treasures!', related: ['motherload', 'raftwars', 'candymachine'] },
+            'tomandjerrybowling': { name: 'TOM & JERRY BOWLING', file: 'tomandjerrybowling.swf', image: 'https://archive.org/serve/tom-and-jerry-bowling/00_B.png', desc: 'Cartoon bowling!', related: ['candymachine', 'gold01', 'bushshootout'] },
+            'hive-hero': { name: 'HIVE HERO', file: 'hive-hero.swf', image: 'https://archive.org/serve/miniclip_hive_hero/miniclip_hive_hero_screenshot.gif', desc: 'Become the ultimate bee!', related: ['motherload', 'gold01', 'earntodie'] },
+            'tj_trapomatic': { name: 'TJ TRAPOMATIC', file: 'tj_trapomatic.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'Contraption madness!', related: ['hive-hero', 'candymachine', 'tomandjerrybowling'] },
+            'britney_brawl_featuring_bill_vs_britney': { name: 'BRITNEY BRAWL', file: 'britney_brawl_featuring_bill_vs_britney.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'Celebrity brawl!', related: ['hive-hero', 'candymachine', 'tomandjerrybowling'] },
+            'bush_vs_kerry': { name: 'BUSH VS KERRY', file: 'bush_vs_kerry.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'Political battle!', related: ['bushshootout', 'candymachine', 'tomandjerrybowling'] },
+            'TheSimpsonsPac-Man': { name: 'SIMPSONS PAC-MAN', file: 'TheSimpsonsPac-Man.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'Springfield maze!', related: ['hive-hero', 'candymachine', 'tomandjerrybowling'] },
+            'the_simpsons_in_homers_beer_run': { name: 'HOMER BEER RUN', file: 'the_simpsons_in_homers_beer_run.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'Duff run!', related: ['hive-hero', 'candymachine', 'tomandjerrybowling'] },
+            'SpongeBob_bcbowling': { name: 'SPONGEBOB BOWLING', file: 'SpongeBob_bcbowling.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'Bikini Bottom bowling!', related: ['tomandjerrybowling', 'candymachine', 'hive-hero'] },
+            'SnowLine': { name: 'SNOW LINE', file: 'SnowLine.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'Winter sports!', related: ['hive-hero', 'candymachine', 'tomandjerrybowling'] },
+            'snowline2': { name: 'SNOW LINE 2', file: 'snowline2.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'More snow action!', related: ['SnowLine', 'candymachine', 'tomandjerrybowling'] },
+            'simpsons_the_ball_of_death': { name: 'BALL OF DEATH', file: 'simpsons_the_ball_of_death.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'Homer on a ball!', related: ['the_simpsons_in_homers_beer_run', 'TheSimpsonsPac-Man', 'tomandjerrybowling'] },
+            'simpsons_magic_ball': { name: 'SIMPSONS MAGIC BALL', file: 'simpsons_magic_ball.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'Fortune telling!', related: ['simpsons_the_ball_of_death', 'candymachine', 'tomandjerrybowling'] },
+            'BattleBowlers': { name: 'BATTLE BOWLERS', file: 'BattleBowlers.swf', image: 'https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif', desc: 'Combat bowling!', related: ['tomandjerrybowling', 'SpongeBob_bcbowling', 'candymachine'] },
+            'rickandmorty': { name: 'RICK AND MORTY', file: 'Rick-and-Morty.swf', image: "https://archive.org/serve/rick-and-mortys-rushed-licensed-adventure/Rick%20and%20Morty's%20Rushed%20Licensed%20Adventure%20sceenshot.jpg", desc: 'Interdimensional adventure!', related: ['happywheels', 'robotunicornattack', 'ruahm'] }
+        };
+        
+        // LOAD GAME
+        if (gameName && games[gameName]) {
+            const currentGame = games[gameName];
+            document.getElementById('game-title').textContent = currentGame.name;
+            document.getElementById('error-game-name').textContent = currentGame.name;
+            document.title = `Playing ${currentGame.name} | Diane Keaton Memorial Arcade`;
+            
+            // Set bot command
+            document.getElementById('discord-command').value = `/play ${gameName}`;
+            
+            // Load Diane Bot recommendations
+            const botRecsContainer = document.getElementById('bot-recommendations');
+            (currentGame.related || []).slice(0, 3).forEach(gameId => {
+                const game = games[gameId];
+                if (game) {
+                    const card = document.createElement('div');
+                    card.style.cssText = `
+                        background: rgba(0, 243, 255, 0.1);
+                        border: 2px solid var(--neon-blue);
+                        border-radius: 15px;
+                        padding: 15px;
+                        text-align: center;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                    `;
+                    card.innerHTML = `
+                        <div style="font-size: 2em; margin-bottom: 10px;">${game.name.charAt(0)}</div>
+                        <div style="font-family: 'Orbitron', sans-serif; font-weight: 900; color: var(--neon-blue); margin-bottom: 5px; font-size: 0.9em;">${game.name}</div>
+                        <div style="font-size: 0.85em; opacity: 0.8; margin-bottom: 10px;">${game.desc}</div>
+                        <div style="font-family: 'Orbitron', sans-serif; color: var(--neon-green); font-size: 0.8em;">/play ${gameId}</div>
+                    `;
+                    card.onclick = () => window.location.href = `game.html?game=${gameId}`;
+                    card.onmouseover = () => {
+                        card.style.transform = 'translateY(-5px)';
+                        card.style.boxShadow = '0 10px 30px rgba(0, 243, 255, 0.5)';
+                    };
+                    card.onmouseout = () => {
+                        card.style.transform = 'translateY(0)';
+                        card.style.boxShadow = 'none';
+                    };
+                    botRecsContainer.appendChild(card);
+                }
+            });
+            
+            // Initialize Ruffle with FULLSCREEN settings
+            window.RufflePlayer = window.RufflePlayer || {};
+            window.RufflePlayer.config = {
+                "autoplay": "on",
+                "unmuteOverlay": "hidden",
+                "backgroundColor": "#000000",
+                "letterbox": "fullscreen",
+                "warnOnUnsupportedContent": false,
+                "contextMenu": false,
+                "quality": "high",
+                "scale": "showAll",
+                "upgradeToHttps": false,
+                "maxExecutionDuration": 15,
+                "logLevel": "warn",
+                "width": "100%",
+                "height": "100%"
+            };
+            
+            const ruffle = window.RufflePlayer.newest();
+            const player = ruffle.createPlayer();
+            const container = document.getElementById('game');
+            container.appendChild(player);
+            
+            // Set player size
+            player.style.width = "100%";
+            player.style.height = "100%";
+            
+            // Load game with better error handling
+            player.load(`games/${currentGame.file}`)
+                .then(() => {
+                    console.log('✅ Game loaded successfully');
+                    document.getElementById('loading').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('❌ Error loading game:', error);
+                    showGameError(currentGame.name, error.message);
+                });
+            
+            // Additional error detection for Ruffle
+            player.addEventListener('error', (event) => {
+                console.error('Ruffle error:', event);
+                showGameError(currentGame.name, 'Ruffle failed to load the Flash file');
+            });
+            
+            // Timeout fallback - if game doesn't load in 10 seconds
+            setTimeout(() => {
+                if (document.getElementById('loading').style.display !== 'none') {
+                    showGameError(currentGame.name, 'Game loading timeout');
+                }
+            }, 10000);
+            
+            // Load recommended games
+            const recommendedContainer = document.getElementById('recommended-games');
+            (currentGame.related || []).forEach(gameId => {
+                const game = games[gameId];
+                if (game) {
+                    const card = document.createElement('a');
+                    card.href = `game.html?game=${gameId}`;
+                    card.className = 'recommended-card';
+                    card.innerHTML = `
+                        <img src="${game.image}" alt="${game.name}" class="recommended-image" onerror="this.src='https://via.placeholder.com/250x150/050510/00f3ff?text=${game.name}'">
+                        <div class="recommended-content">
+                            <h3>${game.name}</h3>
+                            <p>${game.desc}</p>
+                        </div>
+                    `;
+                    recommendedContainer.appendChild(card);
+                }
+            });
+        } else {
+            document.getElementById('loading').innerHTML = `
+                <div style="font-family: Orbitron; font-size: 2em; color: #ff00ff; text-align: center;">
+                    ⚠️ GAME NOT FOUND
+                </div>
+                <a href="index.html" class="try-again-btn" style="margin-top: 30px;">← BACK TO ARCADE</a>
+            `;
+        }
+        
+        // Show game error function
+        function showGameError(gameName, errorMessage) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-game-name').textContent = gameName;
+            document.getElementById('error-msg').style.display = 'block';
+            console.error(`Game Error: ${gameName} - ${errorMessage}`);
+        }
+        
+        // Report broken game function
+        async function reportBrokenGame() {
+            const gameName = urlParams.get('game');
+            const currentGame = games[gameName];
+            
+            if (!currentGame) return;
+            
+            try {
+                // Try to send to backend
+                const response = await fetch('/api/report-broken-game', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        game_id: gameName,
+                        game_name: currentGame.name,
+                        game_file: currentGame.file,
+                        user_agent: navigator.userAgent,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    alert('✅ Thank you! Game issue reported to support team.');
+                } else {
+                    throw new Error('Backend unavailable');
+                }
+            } catch (error) {
+                // Fallback: Open email or Discord
+                const subject = encodeURIComponent(`Broken Game Report: ${currentGame.name}`);
+                const body = encodeURIComponent(`Game: ${currentGame.name}\nGame ID: ${gameName}\nFile: ${currentGame.file}\n\nIssue: The game failed to load.\n\nPlease fix this game!`);
+                
+                if (confirm('Would you like to report this via email?')) {
+                    window.open(`mailto:support@example.com?subject=${subject}&body=${body}`);
+                } else {
+                    window.open('https://discord.gg/jR8tcWF', '_blank');
+                }
+            }
+        }
+        
+        // COPY FUNCTIONS
+        function copyDiscordCommand() {
+            copyToClipboard('discord-command', event.target);
+        }
+        
+        function copyToClipboard(inputId, button) {
+            const input = document.getElementById(inputId);
+            input.select();
+            input.setSelectionRange(0, 99999);
+            
+            navigator.clipboard.writeText(input.value).then(() => {
+                button.textContent = '✅ COPIED!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = '📋 COPY COMMAND';
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                document.execCommand('copy');
+                button.textContent = '✅ COPIED!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = '📋 COPY COMMAND';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

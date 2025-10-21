@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Diane Keaton Memorial Arcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --neon-red: #ff0000;
+            --dark-bg: #050510;
+            --darker: #020208;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(0, 243, 255, 0.05) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, rgba(0, 243, 255, 0.05) 50%, transparent 51%);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .nav-bar {
+            position: sticky; top: 0;
+            background: rgba(5, 5, 16, 0.98);
+            backdrop-filter: blur(30px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--neon-blue);
+            box-shadow: 0 5px 40px rgba(0, 243, 255, 0.4);
+            z-index: 2000;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 20px var(--neon-blue);
+            letter-spacing: 2px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            text-decoration: none;
+            padding: 12px 28px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 30px;
+            transition: all 0.3s;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+        
+        .nav-link:hover {
+            background: var(--neon-blue);
+            color: var(--darker);
+            box-shadow: 0 0 30px var(--neon-blue);
+            transform: translateY(-3px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 40px;
+        }
+        
+        .page-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5em;
+            font-weight: 900;
+            text-align: center;
+            margin: 40px 0;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .settings-section {
+            background: rgba(5, 5, 16, 0.95);
+            border: 3px solid var(--neon-blue);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.3);
+        }
+        
+        .section-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            color: var(--neon-blue);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1em;
+            color: var(--neon-purple);
+            margin-bottom: 10px;
+            display: block;
+            letter-spacing: 1px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 15px;
+            color: white;
+            font-size: 1em;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px var(--neon-purple);
+            background: rgba(191, 0, 255, 0.1);
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 0 40px var(--neon-blue);
+            transform: translateY(-3px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--neon-red), var(--neon-pink));
+            color: white;
+            box-shadow: 0 0 20px var(--neon-red);
+        }
+        
+        .btn-danger:hover {
+            box-shadow: 0 0 40px var(--neon-red);
+            transform: translateY(-3px);
+        }
+        
+        .theme-option {
+            display: inline-block;
+            padding: 20px 40px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            margin: 10px;
+            cursor: not-allowed;
+            opacity: 0.6;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1em;
+        }
+        
+        .friends-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .friend-card {
+            background: rgba(191, 0, 255, 0.1);
+            border: 2px solid var(--neon-purple);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .friend-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px var(--neon-purple);
+        }
+        
+        .friend-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--neon-purple);
+            margin: 0 auto 15px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active { display: flex; }
+        
+        .modal-content {
+            background: rgba(5, 5, 16, 0.98);
+            border: 3px solid var(--neon-red);
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 0 60px var(--neon-red);
+        }
+        
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: var(--neon-red);
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px var(--neon-red);
+        }
+        
+        .modal-text {
+            font-size: 1.2em;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .success-message {
+            background: rgba(57, 255, 20, 0.2);
+            border: 2px solid var(--neon-green);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-green);
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .page-title { font-size: 2.5em; }
+            .friends-list { grid-template-columns: 1fr; }
+            .nav-bar { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-brand">⚙️ SETTINGS</div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">HOME</a>
+            <a href="profile.html" class="nav-link">MY PROFILE</a>
+            <a href="achievements.html" class="nav-link">ACHIEVEMENTS</a>
+            <a href="leaderboard.html" class="nav-link">LEADERBOARD</a>
+            <a href="movies.html" class="nav-link">MOVIES 🎬</a>
+            <a href="admin.html" class="nav-link" id="adminLink" style="display: none; background: linear-gradient(135deg, #ff0000, #ff6600); border: none; color: white;">🛡️ ADMIN PANEL</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1 class="page-title">⚙️ ACCOUNT SETTINGS ⚙️</h1>
+        
+        <div class="success-message" id="successMessage">Settings saved successfully!</div>
+        
+        <!-- User Information -->
+        <div class="settings-section">
+            <h2 class="section-header">👤 User Information</h2>
+            
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-input" id="username" placeholder="Enter new username">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="email" placeholder="Enter new email">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">New Password</label>
+                <input type="password" class="form-input" id="password" placeholder="Enter new password">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm new password">
+            </div>
+            
+            <button class="btn btn-primary" onclick="saveUserInfo()">💾 SAVE CHANGES</button>
+        </div>
+        
+        <!-- Theme Settings -->
+        <div class="settings-section">
+            <h2 class="section-header">🎨 Theme Settings</h2>
+            <p style="margin-bottom: 20px; opacity: 0.8;">Theme customization coming soon!</p>
+            
+            <div class="theme-option">
+                🌙 DARK MODE (Current)
+            </div>
+            
+            <div class="theme-option">
+                ☀️ LIGHT MODE (Coming Soon)
+            </div>
+        </div>
+        
+        <!-- Friends List -->
+        <div class="settings-section">
+            <h2 class="section-header">👥 Friends List</h2>
+            
+            <div class="form-group">
+                <label class="form-label">Add Friend by Username</label>
+                <input type="text" class="form-input" id="friendUsername" placeholder="Enter username">
+                <button class="btn btn-primary" onclick="addFriend()" style="margin-top: 15px;">➕ ADD FRIEND</button>
+            </div>
+            
+            <div class="friends-list" id="friendsList">
+                <div class="friend-card">
+                    <img src="https://via.placeholder.com/80/bf00ff/ffffff?text=👤" alt="Friend" class="friend-avatar">
+                    <h4 style="font-family: 'Orbitron', sans-serif; color: var(--neon-purple); margin-bottom: 10px;">No Friends Yet</h4>
+                    <p style="font-size: 0.9em; opacity: 0.8;">Add friends to see them here!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Danger Zone -->
+        <div class="settings-section" style="border-color: var(--neon-red); box-shadow: 0 0 40px rgba(255, 0, 0, 0.3);">
+            <h2 class="section-header" style="color: var(--neon-red); border-color: var(--neon-red); text-shadow: 0 0 15px var(--neon-red);">⚠️ DANGER ZONE</h2>
+            
+            <p style="font-size: 1.2em; margin-bottom: 30px; line-height: 1.6;">
+                <strong>Warning:</strong> Deleting your account is permanent and cannot be undone. 
+                All your progress, achievements, and data will be lost forever.
+            </p>
+            
+            <button class="btn btn-danger" onclick="showDeleteModal()">🗑️ DELETE ACCOUNT</button>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <h2 class="modal-title">⚠️ DELETE ACCOUNT?</h2>
+            <p class="modal-text">
+                Are you sure you want to delete your account on<br>
+                <strong>Diane Keaton's Memorial Arcade?</strong>
+            </p>
+            <p class="modal-text" style="color: var(--neon-red);">
+                This action is <strong>PERMANENT</strong> and cannot be undone!<br>
+                You will lose all your:
+            </p>
+            <ul style="text-align: left; margin: 20px auto; max-width: 400px; font-size: 1.1em;">
+                <li>✗ Achievements</li>
+                <li>✗ XP and Level Progress</li>
+                <li>✗ Friends List</li>
+                <li>✗ Game Scores</li>
+                <li>✗ Profile Data</li>
+            </ul>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="closeDeleteModal()">↩️ CANCEL</button>
+                <button class="btn btn-danger" onclick="deleteAccount()">🗑️ YES, DELETE MY ACCOUNT</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function loadUserData() {
+            var userData = localStorage.getItem("arcadeUser");
+            if (userData) {
+                userData = JSON.parse(userData);
+                document.getElementById("username").value = userData.username || "";
+                document.getElementById("email").value = userData.email || "";
+            } else {
+                window.location.href = "profile.html";
+            }
+        }
+        
+        function saveUserInfo() {
+            var username = document.getElementById("username").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+            
+            if (password && password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+            
+            var userData = JSON.parse(localStorage.getItem("arcadeUser"));
+            
+            if (username) userData.username = username;
+            if (email) userData.email = email;
+            if (password) userData.password = password;
+            
+            localStorage.setItem("arcadeUser", JSON.stringify(userData));
+            
+            var successMsg = document.getElementById("successMessage");
+            successMsg.style.display = "block";
+            setTimeout(function() {
+                successMsg.style.display = "none";
+            }, 3000);
+            
+            document.getElementById("password").value = "";
+            document.getElementById("confirmPassword").value = "";
+        }
+        
+        function addFriend() {
+            var friendUsername = document.getElementById("friendUsername").value;
+            if (!friendUsername) {
+                alert("Please enter a username!");
+                return;
+            }
+            
+            var userData = JSON.parse(localStorage.getItem("arcadeUser"));
+            if (!userData.friends) userData.friends = [];
+            
+            if (userData.friends.includes(friendUsername)) {
+                alert("Already friends with this user!");
+                return;
+            }
+            
+            userData.friends.push(friendUsername);
+            localStorage.setItem("arcadeUser", JSON.stringify(userData));
+            
+            document.getElementById("friendUsername").value = "";
+            loadFriends();
+        }
+        
+        function loadFriends() {
+            var userData = JSON.parse(localStorage.getItem("arcadeUser"));
+            var friendsList = document.getElementById("friendsList");
+            
+            if (!userData.friends || userData.friends.length === 0) {
+                friendsList.innerHTML = '<div class="friend-card"><img src="https://via.placeholder.com/80/bf00ff/ffffff?text=👤" alt="Friend" class="friend-avatar"><h4 style="font-family: \'Orbitron\', sans-serif; color: var(--neon-purple); margin-bottom: 10px;">No Friends Yet</h4><p style="font-size: 0.9em; opacity: 0.8;">Add friends to see them here!</p></div>';
+                return;
+            }
+            
+            friendsList.innerHTML = "";
+            userData.friends.forEach(function(friend) {
+                friendsList.innerHTML += '<div class="friend-card"><img src="https://via.placeholder.com/80/00f3ff/ffffff?text=' + friend.charAt(0).toUpperCase() + '" alt="' + friend + '" class="friend-avatar"><h4 style="font-family: \'Orbitron\', sans-serif; color: var(--neon-blue); margin-bottom: 10px;">' + friend + '</h4><button class="btn btn-danger" style="padding: 10px 20px; font-size: 0.9em;" onclick="removeFriend(\'' + friend + '\')">REMOVE</button></div>';
+            });
+        }
+        
+        function removeFriend(friendName) {
+            var userData = JSON.parse(localStorage.getItem("arcadeUser"));
+            userData.friends = userData.friends.filter(function(f) { return f !== friendName; });
+            localStorage.setItem("arcadeUser", JSON.stringify(userData));
+            loadFriends();
+        }
+        
+        function showDeleteModal() {
+            document.getElementById("deleteModal").classList.add("active");
+        }
+        
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").classList.remove("active");
+        }
+        
+        function deleteAccount() {
+            localStorage.removeItem("arcadeUser");
+            alert("Your account has been deleted.");
+            window.location.href = "index.html";
+        }
+        
+        document.addEventListener("keydown", function(e) {
+            if (e.key === "Escape") closeDeleteModal();
+        });
+        
+        loadUserData();
+        loadFriends();
+    </script>
+</body>
+</html>

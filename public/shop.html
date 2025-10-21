@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Shop - Diane's Arcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --neon-gold: #ffd700;
+            --dark-bg: #050510;
+            --darker: #020208;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(0, 243, 255, 0.1) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, rgba(0, 243, 255, 0.1) 50%, transparent 51%);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(5, 5, 16, 0.98);
+            backdrop-filter: blur(30px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--neon-blue);
+            box-shadow: 0 5px 40px rgba(0, 243, 255, 0.4);
+            z-index: 2000;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 900;
+            color: var(--neon-gold);
+            text-shadow: 0 0 20px var(--neon-gold);
+            letter-spacing: 2px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            text-decoration: none;
+            padding: 12px 28px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 30px;
+            transition: all 0.3s;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+        
+        .nav-link:hover {
+            background: var(--neon-blue);
+            color: var(--darker);
+            box-shadow: 0 0 30px var(--neon-blue);
+            transform: translateY(-3px);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 0 40px;
+        }
+        
+        .page-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4em;
+            font-weight: 900;
+            text-align: center;
+            margin: 40px 0 20px;
+            background: linear-gradient(135deg, var(--neon-gold), var(--neon-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .coin-balance {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 50px;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-gold);
+            text-shadow: 0 0 30px var(--neon-gold);
+        }
+        
+        .shop-categories {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            padding: 15px 35px;
+            background: rgba(191, 0, 255, 0.1);
+            border: 2px solid var(--neon-purple);
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1em;
+        }
+        
+        .category-btn:hover {
+            background: rgba(191, 0, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .category-btn.active {
+            background: var(--neon-purple);
+            color: white;
+            box-shadow: 0 0 40px var(--neon-purple);
+        }
+        
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            margin-bottom: 80px;
+        }
+        
+        .shop-item {
+            background: rgba(0, 243, 255, 0.05);
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .shop-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px var(--neon-blue);
+            background: rgba(0, 243, 255, 0.1);
+        }
+        
+        .shop-item.special {
+            border-color: var(--neon-gold);
+        }
+        
+        .shop-item.special:hover {
+            box-shadow: 0 0 50px var(--neon-gold);
+        }
+        
+        .item-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .item-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            color: var(--neon-blue);
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+        
+        .item-description {
+            font-size: 1em;
+            opacity: 0.85;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .item-price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em;
+            color: var(--neon-gold);
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .buy-btn {
+            padding: 12px 40px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border: none;
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.5);
+        }
+        
+        .buy-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px var(--neon-blue);
+        }
+        
+        .buy-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .apply-btn {
+            background: linear-gradient(135deg, var(--neon-gold), var(--neon-green));
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+        
+        .apply-btn:hover {
+            box-shadow: 0 0 50px var(--neon-gold);
+        }
+        
+        .special-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: var(--neon-gold);
+            color: var(--darker);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 0.8em;
+        }
+        
+        .requirements {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--neon-gold);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+            font-size: 0.9em;
+        }
+        
+        .requirements h4 {
+            color: var(--neon-gold);
+            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .requirements ul {
+            margin-left: 20px;
+        }
+        
+        .requirements li {
+            margin: 5px 0;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--darker);
+            border: 3px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 0 60px var(--neon-blue);
+        }
+        
+        .modal h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-gold);
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 10px;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1em;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .close-modal {
+            color: var(--neon-pink);
+            font-size: 2em;
+            float: right;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: -100px;
+            right: 30px;
+            padding: 20px 30px;
+            background: var(--neon-blue);
+            color: var(--darker);
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            z-index: 20000;
+            transition: bottom 0.3s;
+            box-shadow: 0 0 40px var(--neon-blue);
+        }
+        
+        .notification.show {
+            bottom: 30px;
+        }
+        
+        .notification.error {
+            background: var(--neon-pink);
+        }
+        
+        .notification.success {
+            background: var(--neon-green);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-brand">🪙 COIN SHOP</div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">HOME</a>
+            <a href="achievements.html" class="nav-link">ACHIEVEMENTS</a>
+            <a href="leaderboard.html" class="nav-link">LEADERBOARD</a>
+            <a href="profile.html" class="nav-link">MY PROFILE</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1 class="page-title">🪙 COIN SHOP 🪙</h1>
+        <div class="coin-balance">Your Balance: <span id="coin-balance">0</span> 🪙</div>
+        
+        <div class="shop-categories">
+            <button class="category-btn active" onclick="filterCategory('all')">ALL ITEMS</button>
+            <button class="category-btn" onclick="filterCategory('badges')">BADGES</button>
+            <button class="category-btn" onclick="filterCategory('cosmetics')">COSMETICS</button>
+            <button class="category-btn" onclick="filterCategory('perks')">PERKS</button>
+        </div>
+        
+        <div class="shop-grid" id="shop-items"></div>
+    </div>
+    
+    <!-- Application Modal -->
+    <div class="modal" id="application-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Apply for Badge</h2>
+            <form id="application-form">
+                <div class="form-group">
+                    <label>Discord Server Invite Link:</label>
+                    <input type="url" name="discord_invite" required placeholder="https://discord.gg/...">
+                </div>
+                <div class="form-group">
+                    <label>Server Member Count:</label>
+                    <input type="number" name="member_count" required placeholder="e.g., 500">
+                </div>
+                <div class="form-group">
+                    <label>Additional Information:</label>
+                    <textarea name="additional_info" placeholder="Tell us about your community..."></textarea>
+                </div>
+                <button type="submit" class="buy-btn">SUBMIT APPLICATION</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        const shopItems = [
+            // BADGES
+            {
+                id: 'verified_discord',
+                name: 'Verified Discord Badge',
+                description: 'Show you\'re a verified Discord community leader!',
+                icon: '🔷',
+                price: 'FREE',
+                category: 'badges',
+                type: 'application',
+                requirements: [
+                    'Discord server with 100+ members',
+                    'Active community (messages daily)',
+                    'Server invite link required'
+                ]
+            },
+            {
+                id: 'org_badge',
+                name: 'Organization Badge',
+                description: 'Official badge for gaming organizations and teams',
+                icon: '🏢',
+                price: 'FREE',
+                category: 'badges',
+                type: 'application',
+                requirements: [
+                    'Discord server with 500+ members',
+                    'Established organization (6+ months)',
+                    'Proof of organization status',
+                    'Admin approval required'
+                ]
+            },
+            {
+                id: 'roblox_badge',
+                name: 'Roblox Developer Badge',
+                description: 'For Roblox game developers and creators',
+                icon: '🎮',
+                price: 'FREE',
+                category: 'badges',
+                type: 'application',
+                requirements: [
+                    'Published Roblox game',
+                    'Discord server with Roblox community',
+                    'Link to your Roblox profile',
+                    'Game with 1000+ visits'
+                ]
+            },
+            {
+                id: 'premium_badge',
+                name: 'Premium Badge',
+                description: 'Show your support with a shiny premium badge!',
+                icon: '💎',
+                price: 5000,
+                category: 'badges',
+                type: 'purchase'
+            },
+            {
+                id: 'founder_badge',
+                name: 'Founder Badge',
+                description: 'Limited edition badge for early supporters',
+                icon: '👑',
+                price: 10000,
+                category: 'badges',
+                type: 'purchase'
+            },
+            
+            // COSMETICS
+            {
+                id: 'custom_title',
+                name: 'Custom Profile Title',
+                description: 'Add a custom title to your profile',
+                icon: '✨',
+                price: 2500,
+                category: 'cosmetics',
+                type: 'purchase'
+            },
+            {
+                id: 'profile_frame',
+                name: 'Animated Profile Frame',
+                description: 'Glowing animated frame for your avatar',
+                icon: '🖼️',
+                price: 3000,
+                category: 'cosmetics',
+                type: 'purchase'
+            },
+            {
+                id: 'name_color',
+                name: 'Colored Username',
+                description: 'Change your username color',
+                icon: '🌈',
+                price: 1500,
+                category: 'cosmetics',
+                type: 'purchase'
+            },
+            
+            // PERKS
+            {
+                id: 'xp_boost',
+                name: 'XP Boost (24h)',
+                description: 'Earn 2x XP for 24 hours!',
+                icon: '⚡',
+                price: 1000,
+                category: 'perks',
+                type: 'purchase'
+            },
+            {
+                id: 'coin_boost',
+                name: 'Coin Boost (7 days)',
+                description: 'Earn 1.5x coins for a week',
+                icon: '💰',
+                price: 2000,
+                category: 'perks',
+                type: 'purchase'
+            },
+            {
+                id: 'name_change',
+                name: 'Username Change',
+                description: 'Change your username one time',
+                icon: '📝',
+                price: 5000,
+                category: 'perks',
+                type: 'purchase'
+            }
+        ];
+        
+        let currentCategory = 'all';
+        let userCoins = 0;
+        
+        async function loadShop() {
+            // Get user's coin balance
+            try {
+                const response = await fetch('/api/user');
+                if (response.ok) {
+                    const user = await response.json();
+                    userCoins = user.coins || 0;
+                    document.getElementById('coin-balance').textContent = userCoins.toLocaleString();
+                }
+            } catch (error) {
+                console.error('Failed to load user data:', error);
+            }
+            
+            renderShop();
+        }
+        
+        function renderShop() {
+            const container = document.getElementById('shop-items');
+            container.innerHTML = '';
+            
+            const filteredItems = currentCategory === 'all' 
+                ? shopItems 
+                : shopItems.filter(item => item.category === currentCategory);
+            
+            filteredItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'shop-item';
+                if (item.type === 'application') card.classList.add('special');
+                
+                const canAfford = typeof item.price === 'number' && userCoins >= item.price;
+                const priceDisplay = typeof item.price === 'number' ? `${item.price.toLocaleString()} 🪙` : item.price;
+                
+                let buttonHTML = '';
+                if (item.type === 'application') {
+                    buttonHTML = `<button class="buy-btn apply-btn" onclick="openApplication('${item.id}')">APPLY NOW</button>`;
+                } else {
+                    buttonHTML = `<button class="buy-btn" onclick="purchaseItem('${item.id}')" ${!canAfford ? 'disabled' : ''}>BUY NOW</button>`;
+                }
+                
+                let requirementsHTML = '';
+                if (item.requirements) {
+                    requirementsHTML = `
+                        <div class="requirements">
+                            <h4>Requirements:</h4>
+                            <ul>
+                                ${item.requirements.map(req => `<li>${req}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    ${item.type === 'application' ? '<div class="special-badge">APPLICATION</div>' : ''}
+                    <div class="item-icon">${item.icon}</div>
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-description">${item.description}</div>
+                    ${requirementsHTML}
+                    <div class="item-price">${priceDisplay}</div>
+                    ${buttonHTML}
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+        
+        function filterCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderShop();
+        }
+        
+        function openApplication(itemId) {
+            const item = shopItems.find(i => i.id === itemId);
+            document.getElementById('modal-title').textContent = `Apply for ${item.name}`;
+            document.getElementById('application-modal').classList.add('active');
+            document.getElementById('application-form').dataset.itemId = itemId;
+        }
+        
+        function closeModal() {
+            document.getElementById('application-modal').classList.remove('active');
+        }
+        
+        async function purchaseItem(itemId) {
+            try {
+                const response = await fetch('/api/shop/purchase', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ item_id: itemId })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showNotification('Purchase successful! 🎉', 'success');
+                    loadShop(); // Refresh shop
+                } else {
+                    showNotification(data.error || 'Purchase failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to purchase item', 'error');
+            }
+        }
+        
+        document.getElementById('application-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const itemId = e.target.dataset.itemId;
+            
+            const application = {
+                item_id: itemId,
+                discord_invite: formData.get('discord_invite'),
+                member_count: formData.get('member_count'),
+                additional_info: formData.get('additional_info')
+            };
+            
+            try {
+                const response = await fetch('/api/shop/apply', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(application)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showNotification('Application submitted! We\'ll review it soon. 🎉', 'success');
+                    closeModal();
+                    e.target.reset();
+                } else {
+                    showNotification(data.error || 'Application failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to submit application', 'error');
+            }
+        });
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+        
+        loadShop();
+    </script>
+</body>
+</html>

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboards - Diane Keaton Memorial Arcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* === GLOBAL STYLES === */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --neon-gold: #ffd700;
+            --dark-bg: #050510;
+            --darker: #020208;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(0,243,255,0.1) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, rgba(0,243,255,0.1) 50%, transparent 51%);
+            background-size:50px 50px;
+            z-index:-1;
+            animation: gridMove 20s linear infinite;
+        }
+        @keyframes gridMove {
+            0% { transform: translate(0,0); }
+            100% { transform: translate(50px,50px); }
+        }
+
+        /* === NAVIGATION === */
+        .nav-bar {
+            position: sticky;
+            top:0;
+            background: rgba(5,5,16,0.98);
+            backdrop-filter: blur(30px);
+            padding:20px 50px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            border-bottom:3px solid var(--neon-blue);
+            box-shadow:0 5px 40px rgba(0,243,255,0.4);
+            z-index:2000;
+            flex-wrap:wrap;
+            gap:20px;
+        }
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size:1.5em;
+            font-weight:900;
+            color: var(--neon-blue);
+            text-shadow:0 0 20px var(--neon-blue);
+            letter-spacing:2px;
+        }
+        .nav-links {
+            display:flex;
+            gap:25px;
+            flex-wrap:wrap;
+        }
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            color:white;
+            text-decoration:none;
+            padding:12px 28px;
+            border:2px solid var(--neon-blue);
+            border-radius:30px;
+            transition: all 0.3s;
+            font-weight:700;
+            letter-spacing:1px;
+            font-size:0.9em;
+        }
+        .nav-link:hover {
+            background: var(--neon-blue);
+            color: var(--darker);
+            box-shadow:0 0 30px var(--neon-blue);
+            transform: translateY(-3px);
+        }
+        .profile-btn { background: linear-gradient(135deg,var(--neon-purple),var(--neon-pink)); border:none; box-shadow:0 0 25px var(--neon-purple);}
+        .bot-btn { background: linear-gradient(135deg,#39ff14,#00f3ff)!important; border:none!important; color:#000!important; box-shadow:0 0 25px #39ff14!important; }
+
+        /* === PAGE LAYOUT === */
+        .container { max-width:1600px; margin:60px auto; padding:0 40px; }
+        .page-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size:4em;
+            font-weight:900;
+            text-align:center;
+            margin:40px 0 60px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* === CATEGORY TABS === */
+        .category-tabs { display:flex; gap:15px; margin-bottom:50px; flex-wrap:wrap; justify-content:center; }
+        .category-tab {
+            padding:15px 35px;
+            background: rgba(0,243,255,0.1);
+            border:2px solid var(--neon-blue);
+            border-radius:25px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight:700;
+            cursor:pointer;
+            transition: all 0.3s;
+            font-size:1em;
+            letter-spacing:1px;
+            color:white;
+        }
+        .category-tab:hover { background: rgba(0,243,255,0.2); transform:translateY(-3px); box-shadow:0 5px 20px rgba(0,243,255,0.3);}
+        .category-tab.active { background: var(--neon-blue); color: var(--darker); box-shadow:0 0 40px var(--neon-blue); }
+
+        /* === LEADERBOARD SECTIONS === */
+        .leaderboard-section { display:none; }
+        .leaderboard-section.active { display:block; }
+        .leaderboard-header { text-align:center; margin-bottom:40px; }
+        .leaderboard-title { font-family:'Orbitron',sans-serif; font-size:2.5em; font-weight:900; color:var(--neon-blue); margin-bottom:15px; }
+        .leaderboard-subtitle { font-size:1.1em; opacity:0.8; }
+
+        /* === PODIUM === */
+        .podium { display:flex; justify-content:center; align-items:flex-end; gap:30px; margin-bottom:60px; flex-wrap:wrap; }
+        .podium-place { background:rgba(5,5,16,0.9); border-radius:20px; padding:30px; text-align:center; transition: all 0.3s; position:relative; }
+        .podium-place:hover { transform:translateY(-10px); box-shadow:0 20px 60px rgba(0,243,255,0.5); }
+        .podium-1 { order:2; border:4px solid var(--neon-gold); box-shadow:0 0 60px rgba(255,215,0,0.6); width:280px; }
+        .podium-2 { order:1; border:4px solid #c0c0c0; box-shadow:0 0 40px rgba(192,192,192,0.4); width:260px; }
+        .podium-3 { order:3; border:4px solid #cd7f32; box-shadow:0 0 40px rgba(205,127,50,0.4); width:260px; }
+        .podium-rank { font-size:4em; margin-bottom:15px; }
+        .podium-avatar { width:120px; height:120px; border-radius:50%; margin:0 auto 20px; border:4px solid var(--neon-blue); box-shadow:0 0 40px var(--neon-blue);}
+        .podium-username { font-family:'Orbitron',sans-serif; font-size:1.5em; font-weight:900; margin-bottom:10px; color:var(--neon-blue); }
+        .podium-score { font-family:'Orbitron',sans-serif; font-size:2em; font-weight:700; color:var(--neon-green); text-shadow:0 0 20px var(--neon-green); }
+        .bot-badge { display:inline-block; background: linear-gradient(135deg,var(--neon-purple),var(--neon-pink)); padding:5px 15px; border-radius:15px; font-size:0.7em; margin-top:10px; box-shadow:0 0 20px var(--neon-purple); }
+
+        /* === LEADERBOARD TABLES === */
+        .leaderboard-table { background: rgba(5,5,16,0.85); border:3px solid var(--neon-blue); border-radius:20px; overflow:hidden; box-shadow:0 0 40px rgba(0,243,255,0.3);}
+        table { width:100%; border-collapse:collapse; }
+        thead { background: rgba(0,243,255,0.2);}
+        th { font-family:'Orbitron',sans-serif; font-weight:900; padding:25px 20px; text-align:left; color:var(--neon-blue); font-size:1.1em; letter-spacing:1px; border-bottom:2px solid var(--neon-blue); }
+        td { padding:25px 20px; border-bottom:1px solid rgba(0,243,255,0.1); font-size:1.05em; }
+        tbody tr { transition:all 0.3s; }
+        tbody tr:hover { background: rgba(0,243,255,0.05); transform:translateX(5px); }
+        .rank-cell { font-family:'Orbitron',sans-serif; font-weight:900; font-size:1.5em; }
+        .rank-top3 { color: var(--neon-gold); text-shadow:0 0 20px var(--neon-gold); }
+        .player-cell { display:flex; align-items:center; gap:15px; }
+        .player-avatar { width:50px; height:50px; border-radius:50%; border:2px solid var(--neon-blue); }
+        .player-name { font-family:'Orbitron',sans-serif; font-weight:700; font-size:1.1em; color:var(--neon-blue);}
+        .player-level { font-size:0.9em; opacity:0.7; }
+        .score-cell { font-family:'Orbitron',sans-serif; font-size:1.4em; font-weight:700; color:var(--neon-green); text-shadow:0 0 15px var(--neon-green); }
+        .view-profile-btn { padding:10px 25px; background: linear-gradient(135deg,var(--neon-purple),var(--neon-pink)); border:none; border-radius:20px; color:white; font-family:'Orbitron',sans-serif; font-weight:700; cursor:pointer; transition:all 0.3s; text-decoration:none; display:inline-block; }
+        .view-profile-btn:hover { box-shadow:0 0 30px var(--neon-purple); transform:scale(1.05); }
+        .no-data { text-align:center; padding:80px; font-size:1.3em; opacity:0.6; }
+        .no-data-icon { font-size:4em; margin-bottom:20px; }
+
+        /* === FOOTER === */
+        .footer {
+            background: rgba(5,5,16,0.95);
+            border-top:3px solid var(--neon-blue);
+            padding:60px 40px 40px;
+            margin-top:100px;
+            text-align:center;
+        }
+        .footer h3 { font-family:'Orbitron',sans-serif; font-size:2em; color:var(--neon-blue); margin-bottom:20px; text-shadow:0 0 30px var(--neon-blue);}
+        .footer p { margin:10px 0; opacity:0.9; line-height:1.8; }
+        .footer-links { display:flex; justify-content:center; gap:30px; margin:40px 0; flex-wrap:wrap; }
+        .footer-link { font-family:'Orbitron',sans-serif; color:var(--neon-blue); text-decoration:none; padding:12px 25px; border:2px solid var(--neon-blue); border-radius:25px; transition:all 0.3s; font-weight:700; }
+        .footer-link:hover { background:var(--neon-blue); color:var(--darker); box-shadow:0 0 30px var(--neon-blue); transform:translateY(-3px); }
+
+        @media (max-width:768px) {
+            .page-title { font-size:2.5em; }
+            .podium { flex-direction:column; align-items:center; }
+            .podium-place { width:100% !important; max-width:300px; }
+            table { font-size:0.85em; }
+            th, td { padding:15px 10px; }
+            .player-cell { flex-direction:column; text-align:center; }
+            .category-tabs { flex-direction:column; }
+            .category-tab { width:100%; }
+            .footer-links { flex-direction:column; gap:15px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-brand">🏆 LEADERBOARDS</div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">HOME</a>
+            <a href="achievements.html" class="nav-link">ACHIEVEMENTS</a>
+            <a href="bot.html" class="nav-link bot-btn">DIANE BOT 🤖</a>
+            <a href="movies.html" class="nav-link">MOVIES 🎬</a>
+            <a href="profile.html" class="nav-link profile-btn">MY PROFILE</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">🏆 LEADERBOARDS 🏆</h1>
+        <div class="category-tabs" id="category-tabs"></div>
+        <div id="leaderboards-container"></div>
+    </div>
+
+    <div class="footer">
+        <h3>IN MEMORY OF DIANE KEATON</h3>
+        <p>January 5, 1946 - October 11, 2025</p>
+        <p style="font-size:1.2em;margin:20px 0;">Forever in Our Hearts ❤️</p>
+        <p>Academy Award Winner • Director • Fashion Icon • Legend</p>
+        <p style="margin-top:30px;font-size:1em;max-width:800px;margin-left:auto;margin-right:auto;">
+            "This arcade preserves classic Flash games in honor of Diane's timeless legacy.<br>
+            Her films taught us to laugh, love, and never take life too seriously."
+        </p>
+        <div class="footer-links">
+            <a href="index.html#games" class="footer-link">GAMES</a>
+            <a href="achievements.html" class="footer-link">ACHIEVEMENTS</a>
+            <a href="leaderboard.html" class="footer-link">LEADERBOARD</a>
+            <a href="bot.html" class="footer-link">DIANE BOT 🤖</a>
+            <a href="movies.html" class="nav-link">MOVIES 🎬</a>
+            <a href="profile.html" class="footer-link">PROFILE</a>
+            <a href="https://discord.gg/jR8tcWF" class="footer-link" target="_blank">DISCORD</a>
+        </div>
+        <p style="margin-top:40px;font-size:0.9em;opacity:0.6;">
+            © 2025 Diane Keaton Memorial Arcade • Powered by Ruffle Flash Emulator<br>
+            All games are property of their respective creators<br>
+            Games preserved for educational and nostalgic purposes
+        </p>
+        <p style="font-size:0.8em;opacity:0.5;margin-top:10px;">Designed by Game Killers Studio</p>
+    </div>
+
+   // === GAME DATA ===
+    <script> 
+    const GAMES = {
+        motherload: { name: 'MotherLoad', icon: '⛏️', subtitle: 'Top miners in the galaxy!' },
+        happywheels: { name: 'Happy Wheels', icon: '🎡', subtitle: 'Masters of ragdoll mayhem!' },
+        gunblood: { name: 'Gun Blood', icon: '🔫', subtitle: 'Fastest guns in the West!' },
+        raftwars: { name: 'Raft Wars', icon: '🚣', subtitle: 'Treasure defenders supreme!' },
+        raftwars2: { name: 'Raft Wars 2', icon: '🚣', subtitle: 'Water park warriors!' },
+        robotunicornattack: { name: 'Robot Unicorn Attack', icon: '🦄', subtitle: 'Always believe in your dreams!' },
+        retrounicornattack: { name: 'Retro Unicorn Attack', icon: '🌈', subtitle: 'Classic unicorn runner!' },
+        ruahm: { name: 'Robot Unicorn Heavy Metal', icon: '🎸', subtitle: 'Metal never dies!' },
+        earntodie: { name: 'Earn to Die', icon: '🧟', subtitle: 'Zombie crushers unite!' },
+        earntodie2012: { name: 'Earn to Die 2012', icon: '🧟‍♂️', subtitle: 'Apocalypse racers!' },
+        EarntoDie2016: { name: 'Earn to Die 2016', icon: '💀', subtitle: 'Undead obliterators!' },
+        EarntoDiePart2: { name: 'Earn to Die Part 2', icon: '🔥', subtitle: 'High octane chaos!' },
+        bushshootout: { name: 'Bush Shootout', icon: '🎯', subtitle: 'Retro shooting legends!' },
+        candymachine: { name: 'Candy Machine', icon: '🍬', subtitle: 'Sweet puzzle masters!' },
+        jawbreaker: { name: 'Jawbreaker', icon: '🍭', subtitle: 'Candy storm crushers!' },
+        gold01: { name: 'Gold Miner', icon: '⚔️', subtitle: 'Treasure grabbers!' },
+        tomandjerrybowling: { name: 'Tom & Jerry Bowling', icon: '🎳', subtitle: 'Cartoon strike champions!' },
+        'hive-hero': { name: 'Hive Hero', icon: '🐝', subtitle: 'Queen bee commanders!' },
+        tj_trapomatic: { name: 'TJ Trapomatic', icon: '🎨', subtitle: 'Master inventors!' },
+        rickandmorty: { name: 'Rick and Morty', icon: '🔬', subtitle: 'Portal masters!' }
+    };
+
+    // === FETCH PLAYERS ===
+    function getAllPlayers() {
+        const players = [];
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+            if (key.startsWith('user_')) {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    if (data && data.username) {
+                        players.push(data);
+                    }
+                } catch(e) {
+                    console.error('Failed to parse player data:', e);
+                }
+            }
+        });
+        return players;
+    }
+
+    function showCategory(category) {
+        document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.leaderboard-section').forEach(sec => sec.classList.remove('active'));
+
+        document.querySelector(`.category-tab[data-category="${category}"]`)?.classList.add('active');
+        document.getElementById(`${category}-section`)?.classList.add('active');
+
+        const players = getAllPlayers().sort((a, b) => {
+            if (category === 'global') return (b.xp||0) - (a.xp||0);
+            return (b.score || 0) - (a.score || 0);
+        });
+
+        createPodium(players, `${category}-podium`, category==='global'?'xp':'score');
+        populateTable(players, `${category}-tbody`, category==='global'?'global':'game');
+    }
+
+    function createPodium(players, containerId, scoreType='xp') {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (players.length === 0) {
+            container.innerHTML = `<div class="no-data"><div class="no-data-icon">🏆</div>No players yet!</div>`;
+            return;
+        }
+
+        const medals = ['🥇','🥈','🥉'];
+        const classes = ['podium-1','podium-2','podium-3'];
+
+        for (let i=0;i<3 && i<players.length;i++){
+            const p = players[i];
+            const div = document.createElement('div');
+            div.className = `podium-place ${classes[i]}`;
+            const scoreVal = scoreType==='xp' ? (p.xp||0).toLocaleString()+' XP' :
+                             scoreType==='achievements' ? (p.achievementsCount||0)+'/50' :
+                             (p.score||0).toLocaleString();
+            const botBadge = p.isBot?'<div class="bot-badge">🤖 BOT</div>':'';
+            div.innerHTML = `
+                <div class="podium-rank">${medals[i]}</div>
+                <img src="${p.avatar||'https://api.dicebear.com/7.x/avataaars/svg?seed='+p.username}" alt="${p.username}" class="podium-avatar">
+                <div class="podium-username">${p.username}</div>
+                ${botBadge}
+                <div class="podium-score">${scoreVal}</div>
+            `;
+            container.appendChild(div);
+        }
+    }
+
+    function populateTable(players, tbodyId, type='global') {
+        const tbody = document.getElementById(tbodyId);
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        if (players.length===0){
+            tbody.innerHTML = `<tr><td colspan="6" class="no-data"><div class="no-data-icon">🎮</div>No players yet!</td></tr>`;
+            return;
+        }
+
+        players.forEach((p,i)=>{
+            const rank=i+1;
+            const rankClass = rank<=3?'rank-top3':'';
+            const rankEmoji = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'';
+            const botBadge = p.isBot?'<span class="bot-badge" style="font-size:0.7em;margin-left:10px;">🤖 BOT</span>':'';
+
+            let row;
+            if(type==='global'){
+                row = `
+                    <tr>
+                        <td class="rank-cell ${rankClass}">${rankEmoji} #${rank}</td>
+                        <td>
+                            <div class="player-cell">
+                                <img src="${p.avatar||'https://api.dicebear.com/7.x/avataaars/svg?seed='+p.username}" class="player-avatar">
+                                <div>
+                                    <div class="player-name">${p.username}${botBadge}</div>
+                                    <div class="player-level">Level ${p.level||1}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${p.level||1}</td>
+                        <td class="score-cell">${(p.xp||0).toLocaleString()}</td>
+                        <td>${p.achievementsCount||0}/50</td>
+                        <td><a href="profile.html?user=${p.username}" class="view-profile-btn">VIEW</a></td>
+                    </tr>
+                `;
+            } else {
+                row = `
+                    <tr>
+                        <td class="rank-cell ${rankClass}">${rankEmoji} #${rank}</td>
+                        <td>
+                            <div class="player-cell">
+                                <img src="${p.avatar||'https://api.dicebear.com/7.x/avataaars/svg?seed='+p.username}" class="player-avatar">
+                                <div class="player-name">${p.username}${botBadge}</div>
+                            </div>
+                        </td>
+                        <td class="score-cell">${(p.score||0).toLocaleString()}</td>
+                        <td>${p.date||'N/A'}</td>
+                        <td><a href="profile.html?user=${p.username}" class="view-profile-btn">VIEW</a></td>
+                    </tr>
+                `;
+            }
+
+            tbody.insertAdjacentHTML('beforeend', row);
+        });
+    }
+
+    function buildLeaderboards() {
+        const tabsContainer = document.getElementById('category-tabs');
+        const lbContainer = document.getElementById('leaderboards-container');
+
+        tabsContainer.innerHTML = '';
+        Object.keys(GAMES).forEach((key,idx)=>{
+            const btn = document.createElement('button');
+            btn.textContent = GAMES[key].icon?`${GAMES[key].icon} ${GAMES[key].name.toUpperCase()}`:GAMES[key];
+            btn.className = 'category-tab' + (idx===0?' active':'');
+            btn.dataset.category = key;
+            btn.onclick = ()=>showCategory(key);
+            tabsContainer.appendChild(btn);
+        });
+
+        lbContainer.innerHTML = '';
+        Object.keys(GAMES).forEach(key=>{
+            lbContainer.innerHTML += `
+                <div class="leaderboard-section" id="${key}-section" ${key==='global'?'class="active"':''}>
+                    <div class="leaderboard-header">
+                        <h2 class="leaderboard-title">${GAMES[key].icon||''} ${GAMES[key].name.toUpperCase()} HIGH SCORES</h2>
+                        <p class="leaderboard-subtitle">${GAMES[key].subtitle||''}</p>
+                    </div>
+                    <div class="podium" id="${key}-podium"></div>
+                    <div class="leaderboard-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>RANK</th>
+                                    <th>PLAYER</th>
+                                    ${key==='global'?'<th>LEVEL</th><th>TOTAL XP</th><th>ACHIEVEMENTS</th>':''}
+                                    <th>${key==='global'?'':'DATE'}</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="${key}-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        });
+
+        showCategory('global');
+    }
+
+    buildLeaderboards();
+</script>
+</body>
+</html>

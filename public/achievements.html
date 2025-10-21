@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements - Diane Keaton Memorial Arcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --dark-bg: #050510;
+            --darker: #020208;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(0, 243, 255, 0.1) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, rgba(0, 243, 255, 0.1) 50%, transparent 51%);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(5, 5, 16, 0.98);
+            backdrop-filter: blur(30px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--neon-blue);
+            box-shadow: 0 5px 40px rgba(0, 243, 255, 0.4);
+            z-index: 2000;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 20px var(--neon-blue);
+            letter-spacing: 2px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            text-decoration: none;
+            padding: 12px 28px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 30px;
+            transition: all 0.3s;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+        
+        .nav-link:hover {
+            background: var(--neon-blue);
+            color: var(--darker);
+            box-shadow: 0 0 30px var(--neon-blue);
+            transform: translateY(-3px);
+        }
+        
+        .profile-btn {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            border: none;
+            box-shadow: 0 0 25px var(--neon-purple);
+        }
+        
+        .container {
+            max-width: 1700px;
+            margin: 60px auto;
+            padding: 0 40px;
+        }
+        
+        .page-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4em;
+            font-weight: 900;
+            text-align: center;
+            margin: 40px 0 30px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 50px;
+            opacity: 0.8;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            padding: 20px 40px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        .stat-label {
+            font-size: 1em;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: 12px 30px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-tab:hover {
+            background: rgba(0, 243, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .filter-tab.active {
+            background: var(--neon-blue);
+            color: var(--darker);
+            box-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+            margin-bottom: 80px;
+        }
+        
+        .achievement-card {
+            background: rgba(191, 0, 255, 0.1);
+            border: 2px solid var(--neon-purple);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .achievement-card.locked {
+            opacity: 0.3;
+            filter: grayscale(100%);
+        }
+        
+        .achievement-card:not(.locked):hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px var(--neon-purple);
+            background: rgba(191, 0, 255, 0.2);
+        }
+        
+        .achievement-badge {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            box-shadow: 0 0 40px var(--neon-purple);
+            animation: badgeGlow 2s ease infinite;
+        }
+        
+        @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 0 40px var(--neon-purple); }
+            50% { box-shadow: 0 0 70px var(--neon-purple), 0 0 100px var(--neon-pink); }
+        }
+        
+        .achievement-card h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3em;
+            color: var(--neon-purple);
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        .achievement-card p {
+            font-size: 0.95em;
+            opacity: 0.85;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .achievement-film {
+            font-size: 0.85em;
+            color: var(--neon-pink);
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        .achievement-xp {
+            margin-top: 15px;
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        
+        .lock-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5em;
+        }
+        
+       /* Footer */
+        .footer {
+            margin-top: 120px;
+            padding: 80px 40px;
+            background: rgba(2, 2, 8, 0.98);
+            border-top: 4px solid var(--neon-blue);
+            text-align: center;
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .footer h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: var(--neon-blue);
+            margin-bottom: 25px;
+            text-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        .footer p {
+            font-size: 1.1em;
+            margin: 15px 0;
+            opacity: 0.8;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+        
+        .footer-link:hover {
+            color: var(--neon-purple);
+            text-shadow: 0 0 15px var(--neon-purple);
+        }
+        
+        @media (max-width: 768px) {
+            .page-title { font-size: 2.5em; }
+            .achievements-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+    <div class="nav-brand">🏆 ACHIEVEMENTS</div>
+    <div class="nav-links">
+        <a href="index.html" class="nav-link">HOME</a>
+        <a href="leaderboard.html" class="nav-link">LEADERBOARD</a>
+        <a href="bot.html" class="nav-link bot-btn">DIANE BOT 🤖</a>
+        <a href="movies.html" class="nav-link">MOVIES 🎬</a>
+        <a href="profile.html" class="nav-link profile-btn">MY PROFILE</a>
+    </div>
+</nav>
+    
+    <h1 class="page-title">🏆 ALL ACHIEVEMENTS 🏆</h1>
+<p class="page-subtitle">
+    Unlock all 75+ achievements inspired by Diane Keaton's legendary film career!<br>
+    Each achievement honors one of her iconic roles and movies.
+</p>
+
+<div class="stats-bar">
+    <div class="stat-box">
+        <div class="stat-number" id="unlocked-count">0</div>
+        <div class="stat-label">Unlocked</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">75+</div>
+        <div class="stat-label">Total</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number" id="completion">0%</div>
+        <div class="stat-label">Completion</div>
+    </div>
+</div>
+        
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="filterAchievements('all')">ALL</button>
+            <button class="filter-tab" onclick="filterAchievements('unlocked')">UNLOCKED</button>
+            <button class="filter-tab" onclick="filterAchievements('locked')">LOCKED</button>
+        </div>
+        
+        <div class="achievements-grid" id="achievements-container"></div>
+        
+    
+    <!-- Footer -->
+<div class="footer">
+    <h3>IN MEMORY OF DIANE KEATON</h3>
+    <p>January 5, 1946 - October 11, 2025</p>
+    <p style="font-size: 1.2em; margin: 20px 0;">Forever in Our Hearts ❤️</p>
+    <p>Academy Award Winner • Director • Fashion Icon • Legend</p>
+    <p style="margin-top: 30px; font-size: 1em; max-width: 800px; margin-left: auto; margin-right: auto;">
+        "This arcade preserves classic Flash games in honor of Diane's timeless legacy.<br>
+        Her films taught us to laugh, love, and never take life too seriously."
+    </p>
+    
+    <div class="footer-links">
+        <a href="#games" class="footer-link">GAMES</a>
+        <a href="achievements.html" class="footer-link">ACHIEVEMENTS</a>
+        <a href="leaderboard.html" class="footer-link">LEADERBOARD</a>
+        <a href="TermsofService.html" class="footer-link">TERMS</a>
+        <a href="PrivacyPolicy.html" class="footer-link">PRIVACY</a>
+        <a href="bot.html" class="footer-link">DIANE BOT 🤖</a>
+        <a href="profile.html" class="footer-link">PROFILE</a>
+        <a href="movies.html" class="footer-link">MOVIES 🎬</a>
+        <a href="https://discord.gg/jR8tcWF" class="footer-link" target="_blank">DISCORD</a>
+    </div>
+    
+    <p style="margin-top: 40px; font-size: 0.9em; opacity: 0.6;">
+        © 2025 Diane Keaton Memorial Arcade • Powered by Game Killers Studio<br>
+        Game Powered by Ruffle Flash Emulator All games are property of their respective creators<br>
+        Games preserved for educational and nostalgic purposes
+    </p>
+    
+    <p style="margin-top: 20px; font-size: 0.85em; opacity: 0.5;">
+        Created with ❤️ by Game Killers Studio™
+    </p>
+</div>
+    <script>
+    const allAchievements = [
+        // STARTER ACHIEVEMENTS
+        { id: 'annie_hall', name: 'Annie Hall', description: 'Play your first game', icon: '🎬', xp: 10, film: '1977 - Academy Award Winner' },
+        { id: 'first_steps', name: 'First Steps', description: 'Create your arcade profile', icon: '👣', xp: 5, film: 'Welcome to the Arcade' },
+        { id: 'coffee_break', name: 'Coffee Break', description: 'Play 5 games', icon: '☕', xp: 25, film: 'Diane\'s Favorite Beverage' },
+        
+        // LEVEL ACHIEVEMENTS
+        { id: 'godfather', name: 'The Godfather', description: 'Reach Level 10', icon: '👑', xp: 50, film: '1972 - Classic Mob Film' },
+        { id: 'godfather_2', name: 'The Godfather Part II', description: 'Reach Level 20', icon: '🎭', xp: 75, film: '1974 - Epic Sequel' },
+        { id: 'manhattan', name: 'Manhattan', description: 'Reach Level 25', icon: '🏙️', xp: 100, film: '1979 - Woody Allen Classic' },
+        { id: 'marvins_room', name: "Marvin's Room", description: 'Reach Level 50', icon: '🏠', xp: 250, film: '1996 - Drama with Meryl Streep' },
+        { id: 'century', name: 'Century Club', description: 'Reach Level 100', icon: '💯', xp: 500, film: 'Elite Status' },
+        
+        // SCORE ACHIEVEMENTS
+        { id: 'something_gotta_give', name: "Something's Gotta Give", description: 'Score 10,000 points total', icon: '💎', xp: 100, film: '2003 - Romantic Comedy' },
+        { id: 'big_score', name: 'Big Score', description: 'Score 50,000 points total', icon: '💰', xp: 200, film: 'High Roller' },
+        { id: 'mega_score', name: 'Mega Score', description: 'Score 100,000 points total', icon: '🌟', xp: 300, film: 'Score Master' },
+        { id: 'legendary', name: 'Legendary', description: 'Score 1,000,000 points total', icon: '👑', xp: 1000, film: 'Arcade Legend' },
+        
+        // GAME COMPLETION
+        { id: 'reds', name: 'Reds', description: 'Earn 20 achievements', icon: '⭐', xp: 150, film: '1981 - Epic Historical Drama' },
+        { id: 'first_wives_club', name: 'First Wives Club', description: 'Complete all games', icon: '💪', xp: 500, film: '1996 - Comedy Classic' },
+        { id: 'father_bride', name: 'Father of the Bride', description: 'Play 100 games', icon: '👰', xp: 300, film: '1991 - Family Comedy' },
+        { id: 'father_bride_2', name: 'Father of the Bride Part II', description: 'Play 200 games', icon: '👶', xp: 400, film: '1995 - Family Sequel' },
+        { id: 'baby_boom', name: 'Baby Boom', description: 'Win 5 games in one day', icon: '🍼', xp: 75, film: '1987 - Comedy Hit' },
+        
+        // EXPLORATION
+        { id: 'manhattan_murder', name: 'Manhattan Murder Mystery', description: 'Try all 20 games', icon: '🔍', xp: 125, film: '1993 - Mystery Comedy' },
+        { id: 'sleeper', name: 'Sleeper', description: 'Play for 24 hours total', icon: '😴', xp: 200, film: '1973 - Sci-Fi Comedy' },
+        { id: 'interiors', name: 'Interiors', description: 'Customize your profile theme', icon: '🖼️', xp: 50, film: '1978 - Bergman-esque Drama' },
+        { id: 'night_owl', name: 'Night Owl', description: 'Play between midnight and 6 AM', icon: '🦉', xp: 50, film: 'Late Night Gaming' },
+        { id: 'morning_glory', name: 'Morning Glory', description: 'Play before 8 AM', icon: '🌅', xp: 50, film: '2010 - Comedy Drama' },
+        
+        // PERSISTENCE
+        { id: 'love_death', name: 'Love and Death', description: 'Lose 100 times but keep playing', icon: '💀', xp: 50, film: '1975 - Philosophical Comedy' },
+        { id: 'play_again_sam', name: 'Play It Again, Sam', description: 'Replay a game 10 times', icon: '🎭', xp: 100, film: '1972 - Romantic Comedy' },
+        { id: 'never_give_up', name: 'Never Give Up', description: 'Play 7 days in a row', icon: '🔥', xp: 150, film: 'Dedication' },
+        { id: 'town_country', name: 'Town & Country', description: 'Play in 2 different locations', icon: '🌆', xp: 75, film: '2001 - Comedy' },
+        
+        // PERFECTION
+        { id: 'shoot_moon', name: 'Shoot the Moon', description: 'Get a perfect score on any game', icon: '🌙', xp: 300, film: '1982 - Family Drama' },
+        { id: 'flawless', name: 'Flawless Victory', description: 'Win without losing once', icon: '✨', xp: 200, film: 'Perfect Performance' },
+        { id: 'speed_demon', name: 'Speed Demon', description: 'Complete a game in under 5 minutes', icon: '⚡', xp: 150, film: 'Lightning Fast' },
+        { id: 'radio_days', name: 'Radio Days', description: 'Play for 10 hours straight', icon: '📻', xp: 250, film: '1987 - Nostalgic Comedy' },
+        
+        // SOCIAL
+        { id: 'good_mother', name: 'The Good Mother', description: 'Add 50 friends', icon: '✨', xp: 150, film: '1988 - Drama' },
+        { id: 'social_butterfly', name: 'Social Butterfly', description: 'React to 100 posts', icon: '🦋', xp: 100, film: 'Community Member' },
+        { id: 'helpful', name: 'Helpful Friend', description: 'React to 10 friends\' achievements', icon: '🤝', xp: 75, film: 'Supporting Others' },
+        { id: 'hanging_up', name: 'Hanging Up', description: 'Chat with 25 players', icon: '📞', xp: 100, film: '2000 - Family Comedy' },
+        { id: 'book_club', name: 'Book Club', description: 'Join 5 gaming groups', icon: '📚', xp: 125, film: '2018 - Comedy' },
+        
+        // SPECIFIC GAMES
+        { id: 'mars_miner', name: 'Mars Miner', description: 'Score 50,000 in MotherLoad', icon: '⛏️', xp: 100, film: 'Martian Master' },
+        { id: 'unicorn_master', name: 'Unicorn Master', description: 'Score 100,000 in Robot Unicorn Attack', icon: '🦄', xp: 150, film: 'Always Believe' },
+        { id: 'zombie_hunter', name: 'Zombie Hunter', description: 'Complete all Earn to Die games', icon: '🧟', xp: 200, film: 'Apocalypse Survivor' },
+        { id: 'quick_draw', name: 'Quick Draw', description: 'Win 10 Gun Blood duels', icon: '🔫', xp: 125, film: 'Western Legend' },
+        { id: 'raft_champion', name: 'Raft Champion', description: 'Beat both Raft Wars games', icon: '🚣', xp: 150, film: 'Treasure Defender' },
+        
+        // COLLECTION
+        { id: 'collector', name: 'Collector', description: 'Unlock 10 achievements', icon: '📚', xp: 75, film: 'Achievement Hunter' },
+        { id: 'hoarder', name: 'Hoarder', description: 'Collect 10,000 coins', icon: '💰', xp: 150, film: 'Wealthy Player' },
+        { id: 'millionaire', name: 'Millionaire', description: 'Collect 1,000,000 coins', icon: '💎', xp: 500, film: 'Rich Beyond Measure' },
+        
+        // TIME-BASED
+        { id: 'weekend_warrior', name: 'Weekend Warrior', description: 'Play on Saturday and Sunday', icon: '🎮', xp: 50, film: 'Weekend Fun' },
+        { id: 'marathon', name: 'Marathon Runner', description: 'Play for 6 hours straight', icon: '🏃', xp: 200, film: 'Endurance Champion' },
+        { id: 'daily_player', name: 'Daily Player', description: 'Play 30 days in a row', icon: '📅', xp: 300, film: 'Committed Gamer' },
+        { id: 'five_easy_pieces', name: 'Five Easy Pieces', description: 'Win 5 games in a row', icon: '🎲', xp: 125, film: '1970 - Drama Classic' },
+        
+        // RARE
+        { id: 'lucky_seven', name: 'Lucky Seven', description: 'Get exactly 7777 points', icon: '🎰', xp: 250, film: 'Jackpot!' },
+        { id: 'easter_egg', name: 'Easter Egg Hunter', description: 'Find 10 hidden secrets', icon: '🥚', xp: 200, film: 'Secret Finder' },
+        { id: 'diane_fan', name: 'Diane Keaton Fan', description: 'View all Diane Keaton info', icon: '💜', xp: 100, film: 'True Fan' },
+        { id: 'other_sister', name: 'The Other Sister', description: 'Help a friend unlock an achievement', icon: '👭', xp: 100, film: '1999 - Drama Comedy' },
+        
+        // COMPETITIVE
+        { id: 'top_ten', name: 'Top Ten', description: 'Reach top 10 on any leaderboard', icon: '🏆', xp: 200, film: 'Elite Player' },
+        { id: 'top_three', name: 'Top Three', description: 'Reach top 3 on any leaderboard', icon: '🥉', xp: 300, film: 'Podium Finish' },
+        { id: 'number_one', name: 'Number One', description: 'Reach #1 on any leaderboard', icon: '🥇', xp: 500, film: 'Champion' },
+        { id: 'mad_money', name: 'Mad Money', description: 'Earn 100,000 XP', icon: '💵', xp: 300, film: '2008 - Heist Comedy' },
+        
+        // SPECIAL
+        { id: 'early_bird', name: 'Early Bird', description: 'Join in the first month', icon: '🐦', xp: 100, film: 'Pioneer' },
+        { id: 'veteran', name: 'Veteran', description: 'Account 1 year old', icon: '🎖️', xp: 500, film: 'Long-time Player' },
+        { id: 'completionist', name: 'Completionist', description: 'Unlock ALL achievements', icon: '👑', xp: 1000, film: 'Master of the Arcade' },
+        
+        // MORE DIANE KEATON FILMS
+        { id: 'looking_goodbar', name: 'Looking for Mr. Goodbar', description: 'Play all candy games', icon: '🍫', xp: 100, film: '1977 - Drama' },
+        { id: 'running_mates', name: 'Running Mates', description: 'Race in 5 games', icon: '🏃', xp: 75, film: '1992 - TV Movie' },
+        { id: 'mrs_soffel', name: 'Mrs. Soffel', description: 'Help 25 friends', icon: '🚗', xp: 125, film: '1984 - Historical Drama' },
+        { id: 'because_said_so', name: 'Because I Said So', description: 'Customize your profile fully', icon: '🎀', xp: 50, film: '2007 - Rom-Com' },
+        { id: 'family_stone', name: 'The Family Stone', description: 'Play during holidays', icon: '💍', xp: 100, film: '2005 - Holiday Film' },
+        { id: 'little_drummer_girl', name: 'The Little Drummer Girl', description: 'Get 100 perfect rhythm hits', icon: '🥁', xp: 150, film: '1984 - Thriller' },
+        { id: 'mamas_boy', name: "Mama's Boy", description: 'Achieve a 100 game streak', icon: '👩', xp: 200, film: '2007 - Comedy' },
+        { id: 'amelia', name: 'Amelia', description: 'Reach 1000 games played', icon: '✈️', xp: 300, film: '2009 - Historical Drama' },
+        { id: 'finding_dory', name: 'Finding Dory', description: 'Find all hidden Easter eggs', icon: '🐠', xp: 250, film: '2016 - Voice Acting' },
+        { id: 'poms', name: 'Poms', description: 'Join a team competition', icon: '📣', xp: 150, film: '2019 - Sports Comedy' },
+        { id: 'loves_labours_lost', name: "Love's Labour's Lost", description: 'Fail a game but try again', icon: '🎪', xp: 50, film: '2000 - Musical' },
+        { id: 'hampstead', name: 'Hampstead', description: 'Play in different game modes', icon: '🏡', xp: 100, film: '2017 - Romantic Comedy' },
+        { id: 'crossing_delancey', name: 'Crossing Delancey', description: 'Cross 50,000 points', icon: '🥖', xp: 150, film: '1988 - Romantic Comedy' },
+        { id: 'wildflower', name: 'Wildflower', description: 'Get a random achievement', icon: '🌸', xp: 75, film: '1991 - TV Movie' },
+        { id: 'and_so_it_goes', name: 'And So It Goes', description: 'Complete the tutorial', icon: '🎵', xp: 25, film: '2014 - Romantic Comedy' },
+        { id: 'ninja_turtles', name: 'Ninja Turtles', description: 'Beat a boss level', icon: '🐢', xp: 200, film: '2016 - Voice Role' },
+        { id: 'china_syndrome', name: 'The China Syndrome', description: 'Survive a difficult challenge', icon: '☢️', xp: 175, film: '1979 - Referenced Film' },
+        { id: 'wines_roses', name: 'Wines and Roses', description: 'Celebrate 100 wins', icon: '🍷', xp: 200, film: 'Victory Celebration' },
+        { id: 'crimes_heart', name: 'Crimes of the Heart', description: 'Form a guild with friends', icon: '❤️', xp: 150, film: '1986 - Drama' },
+        { id: 'ladies_night', name: "Ladies' Night", description: 'Play with 3 friends simultaneously', icon: '👯', xp: 125, film: 'Social Gaming' },
+        { id: 'reunion', name: 'The Reunion', description: 'Return after 30 days away', icon: '🎊', xp: 150, film: 'Welcome Back!' },
+        { id: 'unstrung_heroes', name: 'Unstrung Heroes', description: 'Unlock 25 achievements', icon: '🦸', xp: 200, film: '1995 - Drama' },
+        { id: 'godmothered', name: 'Godmothered', description: 'Grant a wish in community', icon: '🧚', xp: 100, film: '2020 - Disney Film' },
+        { id: 'sextuplets', name: 'Sextuplets', description: 'Play 6 different games in one day', icon: '6️⃣', xp: 150, film: 'Multi-Game Master' }
+    ];
+    
+    let currentFilter = 'all';
+    
+    function loadAchievements() {
+        const userData = JSON.parse(localStorage.getItem('arcadeUser')) || { achievements: [] };
+        const userAchievements = userData.achievements || [];
+        
+        const container = document.getElementById('achievements-container');
+        container.innerHTML = '';
+        
+        let unlockedCount = 0;
+        
+        allAchievements.forEach(achievement => {
+            const userAch = userAchievements.find(a => a.id === achievement.id);
+            const isUnlocked = userAch && userAch.unlocked;
+            
+            if (isUnlocked) unlockedCount++;
+            
+            // Apply filter
+            if (currentFilter === 'unlocked' && !isUnlocked) return;
+            if (currentFilter === 'locked' && isUnlocked) return;
+            
+            const card = document.createElement('div');
+            card.className = 'achievement-card' + (isUnlocked ? '' : ' locked');
+            
+            card.innerHTML = `
+                ${!isUnlocked ? '<div class="lock-icon">🔒</div>' : ''}
+                <div class="achievement-badge">${achievement.icon}</div>
+                <h4>${achievement.name}</h4>
+                <p>${achievement.description}</p>
+                <div class="achievement-film">${achievement.film}</div>
+                <div class="achievement-xp">+${achievement.xp} XP</div>
+            `;
+            
+            container.appendChild(card);
+        });
+        
+        // Update stats
+        document.getElementById('unlocked-count').textContent = unlockedCount;
+        const completion = Math.round((unlockedCount / allAchievements.length) * 100);
+        document.getElementById('completion').textContent = completion + '%';
+    }
+    
+    function filterAchievements(filter) {
+        currentFilter = filter;
+        
+        // Update active tab
+        document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        loadAchievements();
+    }
+    
+    loadAchievements();
+</script>
+</body>
+</html>

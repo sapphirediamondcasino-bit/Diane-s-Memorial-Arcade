@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Diane Keaton Memorial Arcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --neon-red: #ff0000;
+            --neon-orange: #ff6600;
+            --dark-bg: #050510;
+            --darker: #020208;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(0, 243, 255, 0.05) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, rgba(0, 243, 255, 0.05) 50%, transparent 51%);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--neon-red), var(--neon-orange));
+            padding: 30px 50px;
+            box-shadow: 0 5px 40px rgba(255, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .admin-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-shadow: 0 0 30px #fff;
+        }
+        
+        .admin-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 40px auto;
+            padding: 0 40px;
+        }
+        
+        .admin-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .admin-tab {
+            padding: 15px 35px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-size: 1em;
+        }
+        
+        .admin-tab:hover, .admin-tab.active {
+            background: var(--neon-blue);
+            color: var(--darker);
+            box-shadow: 0 0 30px var(--neon-blue);
+            transform: translateY(-3px);
+        }
+        
+        .admin-section {
+            display: none;
+        }
+        
+        .admin-section.active {
+            display: block;
+        }
+        
+        .admin-panel {
+            background: rgba(5, 5, 16, 0.95);
+            border: 3px solid var(--neon-blue);
+            border-radius: 30px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.3);
+        }
+        
+        .panel-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            color: var(--neon-blue);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1em;
+            color: var(--neon-purple);
+            margin-bottom: 10px;
+            display: block;
+            letter-spacing: 1px;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 15px;
+            color: white;
+            font-size: 1em;
+            font-family: 'Roboto', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px var(--neon-purple);
+            background: rgba(191, 0, 255, 0.1);
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            margin-right: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-blue));
+            color: black;
+            box-shadow: 0 0 20px var(--neon-green);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--neon-orange), var(--neon-red));
+            color: white;
+            box-shadow: 0 0 20px var(--neon-orange);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--neon-red), var(--neon-pink));
+            color: white;
+            box-shadow: 0 0 20px var(--neon-red);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 40px currentColor;
+        }
+        
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .user-table th {
+            background: rgba(0, 243, 255, 0.2);
+            padding: 15px;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            border: 2px solid var(--neon-blue);
+        }
+        
+        .user-table td {
+            padding: 15px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+        
+        .user-table tr:hover {
+            background: rgba(0, 243, 255, 0.1);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8em;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .status-active {
+            background: rgba(57, 255, 20, 0.2);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+        }
+        
+        .status-banned {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid var(--neon-red);
+            color: var(--neon-red);
+        }
+        
+        .status-restricted {
+            background: rgba(255, 102, 0, 0.2);
+            border: 1px solid var(--neon-orange);
+            color: var(--neon-orange);
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .alert {
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-family: 'Orbitron', sans-serif;
+            display: none;
+        }
+        
+        .alert-success {
+            background: rgba(57, 255, 20, 0.2);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+        }
+        
+        .alert-danger {
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid var(--neon-red);
+            color: var(--neon-red);
+        }
+        
+        .staff-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .staff-card {
+            background: rgba(191, 0, 255, 0.1);
+            border: 2px solid var(--neon-purple);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .staff-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px var(--neon-purple);
+        }
+        
+        @media (max-width: 768px) {
+            .admin-title { font-size: 1.8em; }
+            .admin-nav { flex-direction: column; }
+            .user-table { font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="admin-title">🛡️ ADMIN PANEL</div>
+        <div class="admin-badge" id="adminEmail">ADMIN</div>
+    </div>
+    
+    <div class="container">
+        <div class="admin-nav">
+            <button class="admin-tab active" onclick="showSection('users')">👥 USER MANAGEMENT</button>
+            <button class="admin-tab" onclick="showSection('staff')">🛡️ STAFF MANAGEMENT</button>
+            <button class="admin-tab" onclick="showSection('moderation')">⚖️ MODERATION</button>
+            <button class="admin-tab" onclick="showSection('content')">📝 CONTENT MANAGEMENT</button>
+            <button class="admin-tab" onclick="showSection('achievements')">🏆 ACHIEVEMENTS</button>
+            <button class="admin-tab" onclick="showSection('leaderboard')">📊 LEADERBOARDS</button>
+        </div>
+        
+        <!-- USER MANAGEMENT SECTION -->
+        <div class="admin-section active" id="users">
+            <div class="admin-panel">
+                <h2 class="panel-header">👥 User Management</h2>
+                
+                <div class="search-bar">
+                    <input type="text" class="form-input search-input" id="userSearch" placeholder="Search users by username or email...">
+                    <button class="btn btn-primary" onclick="searchUsers()">🔍 SEARCH</button>
+                </div>
+                
+                <div class="alert alert-success" id="userAlert"></div>
+                
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Level</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 30px; opacity: 0.6;">Loading users from database...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- STAFF MANAGEMENT SECTION -->
+        <div class="admin-section" id="staff">
+            <div class="admin-panel">
+                <h2 class="panel-header">🛡️ Staff Management</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Add Staff Member by Email</label>
+                    <input type="email" class="form-input" id="staffEmail" placeholder="Enter staff email address">
+                    <button class="btn btn-success" onclick="addStaff()" style="margin-top: 15px;">➕ ADD STAFF</button>
+                </div>
+                
+                <div class="alert alert-success" id="staffAlert"></div>
+                
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-purple); margin: 30px 0 20px;">Current Staff Members</h3>
+                
+                <div class="staff-list" id="staffList">
+                    <div class="staff-card">
+                        <h4 style="font-family: 'Orbitron', sans-serif; color: var(--neon-red); margin-bottom: 10px;">🔥 SUPER ADMIN</h4>
+                        <p style="margin: 10px 0;">tannerkurrasch@gmail.com</p>
+                        <span class="status-badge status-active">PERMANENT</span>
+                    </div>
+                    <div class="staff-card">
+                        <h4 style="font-family: 'Orbitron', sans-serif; color: var(--neon-red); margin-bottom: 10px;">🔥 SUPER ADMIN</h4>
+                        <p style="margin: 10px 0;">kurraschgamingmerchstore@gmail.com</p>
+                        <span class="status-badge status-active">PERMANENT</span>
+                    </div>
+                    <div class="staff-card">
+                        <h4 style="font-family: 'Orbitron', sans-serif; color: var(--neon-red); margin-bottom: 10px;">🔥 SUPER ADMIN</h4>
+                        <p style="margin: 10px 0;">gamekillerszones@gmail.com</p>
+                        <span class="status-badge status-active">PERMANENT</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MODERATION SECTION -->
+        <div class="admin-section" id="moderation">
+            <div class="admin-panel">
+                <h2 class="panel-header">⚖️ Moderation Tools</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Select User</label>
+                    <input type="text" class="form-input" id="modUsername" placeholder="Enter username">
+                </div>
+                
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-orange); margin: 30px 0 20px;">🖼️ Moderate User Images</h3>
+                <p style="margin-bottom: 20px; opacity: 0.8;">Review and remove user profile images and banners that violate Terms of Service</p>
+                <button class="btn btn-warning" onclick="moderateImages()">🖼️ VIEW USER IMAGES</button>
+                
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-orange); margin: 30px 0 20px;">📊 Reset User Progress</h3>
+                <button class="btn btn-warning" onclick="resetLevel()">🔄 RESET LEVEL</button>
+                <button class="btn btn-warning" onclick="resetAchievements()">🏆 RESET ACHIEVEMENTS</button>
+                
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-red); margin: 30px 0 20px;">🚫 Restrictions & Bans</h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Restriction Duration</label>
+                    <select class="form-select" id="restrictDuration">
+                        <option value="5">5 Days</option>
+                        <option value="10">10 Days</option>
+                        <option value="20">20 Days</option>
+                        <option value="30">30 Days</option>
+                        <option value="60">60 Days</option>
+                        <option value="80">80 Days</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-warning" onclick="restrictUserTime()">⏱️ APPLY RESTRICTION</button>
+                <button class="btn btn-danger" onclick="banFromMovies()">🎬 BAN FROM MOVIES</button>
+                <button class="btn btn-danger" onclick="banFromSite()">🚫 BAN FROM SITE</button>
+                
+                <div class="alert alert-success" id="modAlert" style="margin-top: 30px;"></div>
+            </div>
+        </div>
+        
+        <!-- CONTENT MANAGEMENT SECTION -->
+        <div class="admin-section" id="content">
+            <div class="admin-panel">
+                <h2 class="panel-header">📝 Content Management</h2>
+                
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-blue); margin-bottom: 20px;">📜 Terms of Service</h3>
+                <div class="form-group">
+                    <textarea class="form-textarea" id="termsContent" placeholder="Enter Terms of Service content..."></textarea>
+                    <button class="btn btn-primary" onclick="saveTerms()" style="margin-top: 15px;">💾 SAVE TERMS</button>
+                </div>
+                
+                <h3 style="font-family: 'Orbitron', sans-serif; color: var(--neon-blue); margin: 40px 0 20px;">🔒 Privacy Policy</h3>
+                <div class="form-group">
+                    <textarea class="form-textarea" id="privacyContent" placeholder="Enter Privacy Policy content..."></textarea>
+                    <button class="btn btn-primary" onclick="savePrivacy()" style="margin-top: 15px;">💾 SAVE POLICY</button>
+                </div>
+                
+                <div class="alert alert-success" id="contentAlert"></div>
+            </div>
+        </div>
+        
+        <!-- ACHIEVEMENTS SECTION -->
+        <div class="admin-section" id="achievements">
+            <div class="admin-panel">
+                <h2 class="panel-header">🏆 Achievement Management</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Achievement Name</label>
+                    <input type="text" class="form-input" id="achievementName" placeholder="Enter achievement name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Achievement Icon (Emoji)</label>
+                    <input type="text" class="form-input" id="achievementIcon" placeholder="Enter emoji (e.g., 🏆)">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Achievement Description</label>
+                    <textarea class="form-textarea" id="achievementDesc" placeholder="Enter achievement description..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">XP Reward</label>
+                    <input type="number" class="form-input" id="achievementXP" placeholder="Enter XP amount">
+                </div>
+                
+                <button class="btn btn-success" onclick="addAchievement()">➕ ADD ACHIEVEMENT</button>
+                
+                <div class="alert alert-success" id="achievementAlert"></div>
+            </div>
+        </div>
+        
+        <!-- LEADERBOARD SECTION -->
+        <div class="admin-section" id="leaderboard">
+            <div class="admin-panel">
+                <h2 class="panel-header">📊 Leaderboard Management</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Select Game</label>
+                    <select class="form-select" id="leaderboardGame">
+                        <option>Motherload</option>
+                        <option>Happy Wheels</option>
+                        <option>Gun Blood</option>
+                        <option>Raft Wars</option>
+                        <option>Robot Unicorn Attack</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" onclick="viewLeaderboard()">📊 VIEW LEADERBOARD</button>
+                <button class="btn btn-warning" onclick="resetLeaderboard()">🔄 RESET LEADERBOARD</button>
+                
+                <div class="alert alert-success" id="leaderboardAlert"></div>
+                
+                <table class="user-table" style="margin-top: 30px;">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Username</th>
+                            <th>Score</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardTable">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 30px; opacity: 0.6;">Select a game to view leaderboard</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        var adminEmails = [
+            "tannerkurrasch@gmail.com",
+            "kurraschgamingmerchstore@gmail.com",
+            "gamekillerszones@gmail.com"
+        ];
+        
+        var staffMembers = [];
+        
+        function checkAdminAccess() {
+            var userData = localStorage.getItem("arcadeUser");
+            if (!userData) {
+                alert("Access Denied: Please login first");
+                window.location.href = "profile.html";
+                return false;
+            }
+            
+            userData = JSON.parse(userData);
+            if (!adminEmails.includes(userData.email)) {
+                alert("Access Denied: Admin privileges required");
+                window.location.href = "index.html";
+                return false;
+            }
+            
+            document.getElementById("adminEmail").textContent = userData.email;
+            loadUsers();
+            loadStaffList();
+            return true;
+        }
+        
+        async function loadUsers() {
+            try {
+                var response = await fetch('http://localhost:3000/api/admin/users', {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    }
+                });
+                
+                if (response.ok) {
+                    var users = await response.json();
+                    displayUsers(users);
+                } else {
+                    throw new Error('Backend not available');
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                loadUsersFromLocalStorage();
+            }
+        }
+        
+        function loadUsersFromLocalStorage() {
+            var allUsers = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                if (key.startsWith('user_')) {
+                    try {
+                        var user = JSON.parse(localStorage.getItem(key));
+                        allUsers.push(user);
+                    } catch (e) {}
+                }
+            }
+            
+            if (allUsers.length === 0) {
+                document.getElementById("userTableBody").innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px; opacity: 0.6;">No users found. Users will appear here when they sign up.</td></tr>';
+            } else {
+                displayUsers(allUsers);
+            }
+        }
+        
+        function displayUsers(users) {
+            var tbody = document.getElementById("userTableBody");
+            
+            if (!users || users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px; opacity: 0.6;">No users found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = "";
+            users.forEach(function(user) {
+                var statusClass = user.banned ? "status-banned" : (user.restricted ? "status-restricted" : "status-active");
+                var statusText = user.banned ? "BANNED" : (user.restricted ? "RESTRICTED" : "ACTIVE");
+                
+                var row = '<tr>' +
+                    '<td>' + user.username + '</td>' +
+                    '<td>' + user.email + '</td>' +
+                    '<td>' + (user.level || 1) + '</td>' +
+                    '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>' +
+                    '<td>' +
+                    '<button class="btn btn-warning" style="padding: 8px 20px; font-size: 0.8em;" onclick="restrictUser(\'' + user.username + '\', \'' + user.id + '\')">⚠️ RESTRICT</button>' +
+                    '<button class="btn btn-danger" style="padding: 8px 20px; font-size: 0.8em;" onclick="banUser(\'' + user.username + '\', \'' + user.id + '\')">🚫 BAN</button>' +
+                    '</td>' +
+                    '</tr>';
+                
+                tbody.innerHTML += row;
+            });
+        }
+        
+        async function searchUsers() {
+            var searchTerm = document.getElementById("userSearch").value;
+            
+            if (!searchTerm) {
+                loadUsers();
+                return;
+            }
+            
+            try {
+                var response = await fetch('http://localhost:3000/api/admin/users/search?q=' + encodeURIComponent(searchTerm), {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    }
+                });
+                
+                if (response.ok) {
+                    var users = await response.json();
+                    displayUsers(users);
+                    showAlert("userAlert", "Found " + users.length + " user(s)");
+                } else {
+                    showAlert("userAlert", "Search failed");
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showAlert("userAlert", "Error searching users");
+            }
+        }
+        
+        async function restrictUser(username, userId) {
+            if (confirm("Restrict user: " + username + "?")) {
+                try {
+                    var response = await fetch('http://localhost:3000/api/admin/users/' + userId + '/restrict', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                        },
+                        body: JSON.stringify({ restricted: true })
+                    });
+                    
+                    if (response.ok) {
+                        showAlert("userAlert", "User " + username + " has been restricted");
+                        loadUsers();
+                    } else {
+                        throw new Error('Backend not available');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    restrictUserLocal(username);
+                }
+            }
+        }
+        
+        function restrictUserLocal(username) {
+            var userData = JSON.parse(localStorage.getItem('user_' + username) || '{}');
+            userData.restricted = true;
+            userData.restrictedDate = new Date().toISOString();
+            localStorage.setItem('user_' + username, JSON.stringify(userData));
+            showAlert("userAlert", "User " + username + " has been restricted (Local Mode)");
+            loadUsers();
+        }
+        
+        async function banUser(username, userId) {
+            if (confirm("Ban user: " + username + " from the site?")) {
+                try {
+                    var response = await fetch('http://localhost:3000/api/admin/users/' + userId + '/ban', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                        },
+                        body: JSON.stringify({ banned: true })
+                    });
+                    
+                    if (response.ok) {
+                        showAlert("userAlert", "User " + username + " has been banned");
+                        loadUsers();
+                    } else {
+                        throw new Error('Backend not available');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    banUserLocal(username);
+                }
+            }
+        }
+        
+        function banUserLocal(username) {
+            var userData = JSON.parse(localStorage.getItem('user_' + username) || '{}');
+            userData.banned = true;
+            userData.bannedDate = new Date().toISOString();
+            localStorage.setItem('user_' + username, JSON.stringify(userData));
+            showAlert("userAlert", "User " + username + " has been banned (Local Mode)");
+            loadUsers();
+        }
+        
+        async function addStaff() {
+            var email = document.getElementById("staffEmail").value;
+            if (!email) {
+                alert("Please enter an email address");
+                return;
+            }
+            
+            if (adminEmails.includes(email)) {
+                alert("This email already has Super Admin privileges");
+                return;
+            }
+            
+            try {
+                var response = await fetch('http://localhost:3000/api/admin/staff', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+                
+                if (response.ok) {
+                    showAlert("staffAlert", "Staff member added: " + email);
+                    document.getElementById("staffEmail").value = "";
+                    loadStaffList();
+                } else {
+                    showAlert("staffAlert", "Failed to add staff member");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert("staffAlert", "Error adding staff member");
+            }
+        }
+        
+        async function loadStaffList() {
+            try {
+                var response = await fetch('http://localhost:3000/api/admin/staff', {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    }
+                });
+                
+                if (response.ok) {
+                    staffMembers = await response.json();
+                }
+            } catch (error) {
+                console.error('Error loading staff:', error);
+            }
+            
+            var staffList = document.getElementById("staffList");
+            var html = '<div class="staff-card"><h4 style="font-family: \'Orbitron\', sans-serif; color: var(--neon-red); margin-bottom: 10px;">🔥 SUPER ADMIN</h4><p style="margin: 10px 0;">tannerkurrasch@gmail.com</p><span class="status-badge status-active">PERMANENT</span></div>';
+            html += '<div class="staff-card"><h4 style="font-family: \'Orbitron\', sans-serif; color: var(--neon-red); margin-bottom: 10px;">🔥 SUPER ADMIN</h4><p style="margin: 10px 0;">kurraschgamingmerchstore@gmail.com</p><span class="status-badge status-active">PERMANENT</span></div>';
+            html += '<div class="staff-card"><h4 style="font-family: \'Orbitron\', sans-serif; color: var(--neon-red); margin-bottom: 10px;">🔥 SUPER ADMIN</h4><p style="margin: 10px 0;">gamekillerszones@gmail.com</p><span class="status-badge status-active">PERMANENT</span></div>';
+            
+            staffMembers.forEach(function(staff) {
+                html += '<div class="staff-card"><h4 style="font-family: \'Orbitron\', sans-serif; color: var(--neon-purple); margin-bottom: 10px;">🛡️ STAFF</h4><p style="margin: 10px 0;">' + staff.email + '</p><button class="btn btn-danger" style="padding: 8px 20px; font-size: 0.8em; margin-top: 10px;" onclick="removeStaff(\'' + staff.id + '\', \'' + staff.email + '\')">REMOVE</button></div>';
+            });
+            
+            staffList.innerHTML = html;
+        }
+        
+        async function removeStaff(staffId, email) {
+            if (confirm("Remove staff member: " + email + "?")) {
+                try {
+                    var response = await fetch('http://localhost:3000/api/admin/staff/' + staffId, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        showAlert("staffAlert", "Staff member removed: " + email);
+                        loadStaffList();
+                    } else {
+                        showAlert("staffAlert", "Failed to remove staff member");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert("staffAlert", "Error removing staff member");
+                }
+            }
+        }
+        
+        async function moderateImages() {
+            var username = document.getElementById("modUsername").value;
+            if (!username) {
+                alert("Please enter a username");
+                return;
+            }
+            
+            try {
+                var response = await fetch('http://localhost:3000/api/admin/users/images?username=' + encodeURIComponent(username), {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    }
+                });
+                
+                if (response.ok) {
+                    var images = await response.json();
+                    showAlert("modAlert", "Found " + images.length + " image(s) for user: " + username);
+                } else {
+                    showAlert("modAlert", "User not found or has no images");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert("modAlert", "Error loading user images");
+            }
+        }
+        
+        async function resetLevel() {
+            var username = document.getElementById("modUsername").value;
+            if (!username) {
+                alert("Please enter a username");
+                return;
+            }
+            if (confirm("Reset level for user: " + username + "?")) {
+                try {
+                    var response = await fetch('http://localhost:3000/api/admin/users/reset-level', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                        },
+                        body: JSON.stringify({ username: username })
+                    });
+                    
+                    if (response.ok) {
+                        showAlert("modAlert", "Level reset for: " + username);
+                    } else {
+                        showAlert("modAlert", "Failed to reset level");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert("modAlert", "Error resetting level");
+                }
+            }
+        }
+        
+        async function resetAchievements() {
+            var username = document.getElementById("modUsername").value;
+            if (!username) {
+                alert("Please enter a username");
+                return;
+            }
+            if (confirm("Reset achievements for user: " + username + "?")) {
+                try {
+                    var response = await fetch('http://localhost:3000/api/admin/users/reset-achievements', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                        },
+                        body: JSON.stringify({ username: username })
+                    });
+                    
+                    if (response.ok) {
+                        showAlert("modAlert", "Achievements reset for: " + username);
+                    } else {
+                        showAlert("modAlert", "Failed to reset achievements");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert("modAlert", "Error resetting achievements");
+                }
+            }
+        }
+        
+        async function restrictUserTime() {
+            var username = document.getElementById("modUsername").value;
+            var duration = document.getElementById("restrictDuration").value;
+            if (!username) {
+                alert("Please enter a username");
+                return;
+            }
+            if (confirm("Restrict " + username + " for " + duration + " days?")) {
+                try {
+                    var response = await fetch('http://localhost:3000/api/admin/users/restrict-time', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                        },
+                        body: JSON.stringify({ username: username, days: parseInt(duration) })
+                    });
+                    
+                    if (response.ok) {
+                        showAlert("modAlert", username + " restricted for " + duration + " days");
+                    } else {
+                        showAlert("modAlert", "Failed to apply restriction");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert("modAlert", "Error applying restriction");
+                }
+            }
+        }
+        
+        async function banFromMovies() {
+            var username = document.getElementById("modUsername").value;
+            if (!username) {
+                alert("Please enter a username");
+                return;
+            }
+            if (confirm("Ban " + username + " from Movies page?")) {
+                try {
+                    var response = await fetch('http://localhost:3000/api/admin/users/ban-movies', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                        },
+                        body: JSON.stringify({ username: username })
+                    });
+                    
+                    if (response.ok) {
+                        showAlert("modAlert", username + " banned from Movies page");
+                    } else {
+                        showAlert("modAlert", "Failed to ban from movies");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert("modAlert", "Error banning from movies");
+                }
+            }
+        }
+        
+        async function banFromSite() {
+            var username = document.getElementById("modUsername").value;
+            if (!username) {
+                alert("Please enter a username");
+                return;
+            }
+            if (confirm("Ban " + username + " from entire site?")) {
+                try {
+                    var response = await fetch('http://localhost:3000/api/admin/users/ban-site', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                        },
+                        body: JSON.stringify({ username: username })
+                    });
+                    
+                    if (response.ok) {
+                        showAlert("modAlert", username + " banned from site");
+                        loadUsers();
+                    } else {
+                        showAlert("modAlert", "Failed to ban from site");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert("modAlert", "Error banning from site");
+                }
+            }
+        }
+        
+        async function saveTerms() {
+            var content = document.getElementById("termsContent").value;
+            if (!content) {
+                alert("Please enter Terms of Service content");
+                return;
+            }
+            
+            try {
+                var response = await fetch('http://localhost:3000/api/admin/content/terms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    },
+                    body: JSON.stringify({ content: content })
+                });
+                
+                if (response.ok) {
+                    showAlert("contentAlert", "Terms of Service saved successfully");
+                } else {
+                    showAlert("contentAlert", "Failed to save Terms of Service");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert("contentAlert", "Error saving Terms of Service");
+            }
+        }
+        
+        async function savePrivacy() {
+            var content = document.getElementById("privacyContent").value;
+            if (!content) {
+                alert("Please enter Privacy Policy content");
+                return;
+            }
+            
+            try {
+                var response = await fetch('http://localhost:3000/api/admin/content/privacy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    },
+                    body: JSON.stringify({ content: content })
+                });
+                
+                if (response.ok) {
+                    showAlert("contentAlert", "Privacy Policy saved successfully");
+                } else {
+                    showAlert("contentAlert", "Failed to save Privacy Policy");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert("contentAlert", "Error saving Privacy Policy");
+            }
+        }
+        
+        async function addAchievement() {
+            var name = document.getElementById("achievementName").value;
+            var icon = document.getElementById("achievementIcon").value;
+            var desc = document.getElementById("achievementDesc").value;
+            var xp = document.getElementById("achievementXP").value;
+            
+            if (!name || !icon || !desc || !xp) {
+                alert("Please fill in all fields");
+                return;
+            }
+            
+            try {
+                var response = await fetch('http://localhost:3000/api/admin/achievements', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        icon: icon,
+                        description: desc,
+                        xp: parseInt(xp)
+                    })
+                });
+                
+                if (response.ok) {
+                    showAlert("achievementAlert", "Achievement created successfully");
+                    document.getElementById("achievementName").value = "";
+                    document.getElementById("achievementIcon").value = "";
+                    document.getElementById("achievementDesc").value = "";
+                    document.getElementById("achievementXP").value = "";
+                } else {
+                    showAlert("achievementAlert", "Failed to create achievement");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert("achievementAlert", "Error creating achievement");
+            }
+        }
+        
+        async function viewLeaderboard() {
+            var game = document.getElementById("leaderboardGame").value;
+            
+            try {
+                var response = await fetch('http://localhost:3000/api/admin/leaderboard?game=' + encodeURIComponent(game), {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                    }
+                });
+                
+                if (response.ok) {
+                    var scores = await response.json();
+                    displayLeaderboard(scores);
+                } else {
+                    showAlert("leaderboardAlert", "Failed to load leaderboard");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert("leaderboardAlert", "Error loading leaderboard");
+            }
+        }
+        
+        function displayLeaderboard(scores) {
+            var tbody = document.getElementById("leaderboardTable");
+            
+            if (!scores || scores.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px; opacity: 0.6;">No scores found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = "";
+            scores.forEach(function(score, index) {
+                var row = '<tr>' +
+                    '<td>' + (index + 1) + '</td>' +
+                    '<td>' + score.username + '</td>' +
+                    '<td>' + score.score + '</td>' +
+                    '<td>' + new Date(score.date).toLocaleDateString() + '</td>' +
+                    '<td><button class="btn btn-danger" style="padding: 8px 20px; font-size: 0.8em;" onclick="deleteScore(\'' + score.id + '\')">DELETE</button></td>' +
+                    '</tr>';
+                
+                tbody.innerHTML += row;
+            });
+        }
+        
+        async function resetLeaderboard() {
+            var game = document.getElementById("leaderboardGame").value;
+            
+            if (confirm("Reset entire leaderboard for " + game + "?")) {
+                try {
+                    var response = await fetch('http://localhost:3000/api/admin/leaderboard/reset', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                        },
+                        body: JSON.stringify({ game: game })
+                    });
+                    
+                    if (response.ok) {
+                        showAlert("leaderboardAlert", "Leaderboard reset for " + game);
+                        viewLeaderboard();
+                    } else {
+                        showAlert("leaderboardAlert", "Failed to reset leaderboard");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert("leaderboardAlert", "Error resetting leaderboard");
+                }
+            }
+        }
+        
+        async function deleteScore(scoreId) {
+            if (confirm("Delete this score?")) {
+                try {
+                    var response = await fetch('http://localhost:3000/api/admin/leaderboard/score/' + scoreId, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        showAlert("leaderboardAlert", "Score deleted");
+                        viewLeaderboard();
+                    } else {
+                        showAlert("leaderboardAlert", "Failed to delete score");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    showAlert("leaderboardAlert", "Error deleting score");
+                }
+            }
+        }
+        
+        function
+                
+        function showSection(section) {
+            var sections = document.querySelectorAll(".admin-section");
+            var tabs = document.querySelectorAll(".admin-tab");
+            
+            sections.forEach(function(s) { s.classList.remove("active"); });
+            tabs.forEach(function(t) { t.classList.remove("active"); });
+            
+            document.getElementById(section).classList.add("active");
+            event.target.classList.add("active");
+        }
+        
+        function showAlert(alertId, message) {
+            var alert = document.getElementById(alertId);
+            alert.textContent = message;
+            alert.style.display = "block";
+            setTimeout(function() {
+                alert.style.display = "none";
+            }, 5000);
+        }
+        
+        checkAdminAccess();
+    </script>
+</body>
+</html>

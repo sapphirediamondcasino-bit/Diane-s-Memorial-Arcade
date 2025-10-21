@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diane Keaton Memorial Arcade - Play Classic Flash Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --dark-bg: #050510;
+            --darker: #020208;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* FIXED: Animated Neon Grid Background - More Transparent */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(0, 243, 255, 0.03) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, rgba(0, 243, 255, 0.03) 50%, transparent 51%);
+            background-size: 50px 50px;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* FIXED: Diane Keaton Images - Always Visible, Fixed Position */
+        .hero-images {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px;
+            opacity: 0.25;
+            filter: grayscale(30%) brightness(0.7);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .hero-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            animation: imageFloat 8s ease-in-out infinite;
+        }
+        
+        .hero-images img:nth-child(1) { animation-delay: 0s; }
+        .hero-images img:nth-child(2) { animation-delay: 2s; }
+        .hero-images img:nth-child(3) { animation-delay: 4s; }
+        .hero-images img:nth-child(4) { animation-delay: 6s; }
+        .hero-images img:nth-child(5) { animation-delay: 1s; }
+        .hero-images img:nth-child(6) { animation-delay: 3s; }
+        .hero-images img:nth-child(7) { animation-delay: 5s; }
+        .hero-images img:nth-child(8) { animation-delay: 7s; }
+        
+        @keyframes imageFloat {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.25; }
+            50% { transform: translateY(-20px) scale(1.05); opacity: 0.35; }
+        }
+        
+        /* Memorial Hero Banner */
+        .memorial-hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 4px solid var(--neon-blue);
+            box-shadow: 0 10px 80px rgba(0, 243, 255, 0.5);
+            z-index: 10;
+        }
+        
+        /* Hero Content */
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            text-align: center;
+            padding: 60px 40px;
+            background: rgba(5, 5, 16, 0.92);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 3px solid var(--neon-blue);
+            max-width: 1000px;
+            box-shadow: 
+                0 0 60px rgba(0, 243, 255, 0.6),
+                inset 0 0 60px rgba(0, 243, 255, 0.1);
+        }
+        
+        .memorial-badge {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            border-radius: 50px;
+            margin-bottom: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.1em;
+            letter-spacing: 3px;
+            box-shadow: 0 0 40px var(--neon-purple);
+            animation: memorialPulse 3s ease infinite;
+        }
+        
+        @keyframes memorialPulse {
+            0%, 100% { 
+                box-shadow: 0 0 40px var(--neon-purple);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 80px var(--neon-purple), 0 0 120px var(--neon-pink);
+                transform: scale(1.05);
+            }
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5em;
+            font-weight: 900;
+            margin: 30px 0;
+            background: linear-gradient(135deg, var(--neon-blue) 0%, var(--neon-purple) 50%, var(--neon-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 80px rgba(0, 243, 255, 0.8);
+            letter-spacing: 5px;
+            line-height: 1.2;
+        }
+        
+        .hero-quote {
+            font-size: 1.3em;
+            font-style: italic;
+            color: var(--neon-blue);
+            margin: 30px 0;
+            opacity: 0.9;
+            text-shadow: 0 0 20px var(--neon-blue);
+        }
+        
+        .hero-description {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin: 30px 0;
+            opacity: 0.85;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 20px 30px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 2px solid var(--neon-blue);
+            border-radius: 20px;
+            min-width: 150px;
+        }
+        
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            margin-top: 10px;
+            opacity: 0.8;
+            letter-spacing: 2px;
+        }
+        
+        /* Navigation Bar */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(5, 5, 16, 0.98);
+            backdrop-filter: blur(30px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--neon-blue);
+            box-shadow: 0 5px 40px rgba(0, 243, 255, 0.4);
+            z-index: 2000;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 20px var(--neon-blue);
+            letter-spacing: 2px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            text-decoration: none;
+            padding: 12px 28px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 30px;
+            transition: all 0.3s;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s, height 0.4s;
+            z-index: -1;
+        }
+        
+        .nav-link:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .nav-link:hover {
+            color: var(--darker);
+            box-shadow: 0 0 30px var(--neon-blue);
+            transform: translateY(-3px);
+            border-color: var(--neon-blue);
+        }
+        
+        .profile-btn {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink)) !important;
+            border: none !important;
+            box-shadow: 0 0 25px var(--neon-purple) !important;
+        }
+        
+        .profile-btn::before {
+            background: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        .profile-btn:hover {
+            box-shadow: 0 0 50px var(--neon-purple), 0 0 80px var(--neon-pink) !important;
+            transform: translateY(-3px) scale(1.05) !important;
+            color: white !important;
+        }
+        
+        .bot-btn {
+            background: linear-gradient(135deg, #39ff14, #00f3ff) !important;
+            border: none !important;
+            color: #000 !important;
+            box-shadow: 0 0 25px #39ff14 !important;
+            font-weight: 900;
+        }
+        
+        .bot-btn::before {
+            background: rgba(255, 255, 255, 0.4) !important;
+        }
+        
+        .bot-btn:hover {
+            box-shadow: 0 0 50px #39ff14, 0 0 80px #00f3ff !important;
+            transform: translateY(-3px) scale(1.05) !important;
+            color: #000 !important;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1700px;
+            margin: 80px auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5em;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 200px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            margin: 30px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 45px;
+            margin-bottom: 80px;
+        }
+        
+        /* Game Cards - Solid Background */
+        .game-card {
+            background: rgba(5, 5, 16, 0.95);
+            border: 3px solid transparent;
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            cursor: pointer;
+            backdrop-filter: blur(15px);
+        }
+        
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), var(--neon-pink), var(--neon-blue));
+            background-size: 400%;
+            border-radius: 25px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.5s;
+            animation: borderRotate 3s linear infinite;
+        }
+        
+        @keyframes borderRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .game-card:hover::before {
+            opacity: 1;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 80px rgba(0, 243, 255, 0.5);
+        }
+        
+        .game-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--neon-blue);
+            transition: all 0.3s;
+        }
+        
+        .game-card:hover .game-image {
+            filter: brightness(1.2);
+        }
+        
+        .game-content {
+            padding: 30px;
+            text-align: center;
+            background: rgba(5, 5, 16, 0.98);
+        }
+        
+        .game-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            font-weight: 900;
+            margin-bottom: 10px;
+            color: var(--neon-blue);
+            letter-spacing: 2px;
+        }
+        
+        .game-creator {
+            font-size: 0.85em;
+            color: var(--neon-purple);
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        
+        .game-card p {
+            font-size: 1em;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .achievement-preview {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .achievement-mini {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            box-shadow: 0 0 20px var(--neon-purple);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .achievement-mini:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 40px var(--neon-purple);
+        }
+        
+        .play-btn {
+            display: inline-block;
+            padding: 18px 55px;
+            background: linear-gradient(135deg, var(--neon-blue) 0%, var(--neon-purple) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.2em;
+            letter-spacing: 3px;
+            transition: all 0.4s;
+            box-shadow: 0 8px 40px rgba(0, 243, 255, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .play-btn::before {
+            content: '▶';
+            position: absolute;
+            left: 25px;
+            font-size: 1.2em;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .play-btn:hover {
+            padding-left: 70px;
+            box-shadow: 0 15px 60px rgba(0, 243, 255, 0.8);
+            transform: translateY(-3px);
+        }
+        
+        .play-btn:hover::before {
+            opacity: 1;
+            left: 30px;
+        }
+        
+        /* Achievements Section */
+        .achievements-section {
+            background: rgba(5, 5, 16, 0.95);
+            border: 3px solid var(--neon-purple);
+            border-radius: 30px;
+            padding: 60px 40px;
+            margin: 80px 0;
+            box-shadow: 0 0 60px rgba(191, 0, 255, 0.3);
+            backdrop-filter: blur(15px);
+        }
+        
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+            margin-top: 50px;
+        }
+        
+        .achievement-card {
+            background: rgba(191, 0, 255, 0.15);
+            border: 2px solid var(--neon-purple);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .achievement-card:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 50px var(--neon-purple);
+            background: rgba(191, 0, 255, 0.25);
+        }
+        
+        .achievement-badge {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            box-shadow: 0 0 40px var(--neon-purple);
+            animation: badgeGlow 2s ease infinite;
+        }
+        
+        @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 0 40px var(--neon-purple); }
+            50% { box-shadow: 0 0 70px var(--neon-purple), 0 0 100px var(--neon-pink); }
+        }
+        
+        .achievement-card h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4em;
+            color: var(--neon-purple);
+            margin-bottom: 12px;
+            font-weight: 900;
+        }
+        
+        .achievement-card p {
+            font-size: 0.95em;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            padding: 80px 40px;
+            background: rgba(2, 2, 8, 0.98);
+            border-top: 4px solid var(--neon-blue);
+            text-align: center;
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .footer h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: var(--neon-blue);
+            margin-bottom: 25px;
+            text-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        .footer p {
+            font-size: 1.1em;
+            margin: 15px 0;
+            opacity: 0.8;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+        
+        .footer-link:hover {
+            color: var(--neon-purple);
+            text-shadow: 0 0 15px var(--neon-purple);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.8em; }
+            .hero-images { grid-template-columns: repeat(2, 1fr); }
+            .games-grid { grid-template-columns: 1fr; }
+            .nav-bar { flex-direction: column; }
+            .hero-stats { flex-direction: column; gap: 25px; }
+            .nav-links { flex-direction: column; width: 100%; }
+            .nav-link { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Diane Keaton Images Background - Fixed Position -->
+    <div class="hero-images">
+        <img src="https://bdc2020.o0bc.com/wp-content/uploads/2025/10/Obit_Diane_Keaton_46755-68eab8c201b3c-scaled.jpg" alt="Diane Keaton">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Diane_Keaton_2012-1_%28cropped%29_%28cropped%29.jpg" alt="Diane Keaton">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2e8SpsTnRDB-VliZnuKaCLJZs_lDxQiTcnyhmrSiPDIEBkB9c8x1Tcdx04QmmQfF_SOo&usqp=CAU" alt="Diane Keaton">
+        <img src="https://media.cnn.com/api/v1/images/stellar/prod/220814151830-diane-keaton-2022-tcl-chinese-theatre.jpg?c=original" alt="Diane Keaton">
+        <img src="https://m.media-amazon.com/images/M/MV5BMTY5NDI5OTEyOF5BMl5BanBnXkFtZTgwMzU4NDI1NzM@._V1_.jpg" alt="Diane Keaton">
+        <img src="https://s.france24.com/media/display/f83d67d8-a6d7-11f0-a4c0-005056a97e36/w:1280/p:16x9/AP23252847066711.jpg" alt="Diane Keaton">
+        <img src="https://static.wikia.nocookie.net/godfather/images/0/0f/Keaton.jpg/revision/latest?cb=20071012160246" alt="Diane Keaton">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/57/Mad_money_post.jpg/250px-Mad_money_post.jpg" alt="Diane Keaton">
+    </div>
+
+    <!-- Memorial Hero -->
+    <div class="memorial-hero">
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <div class="memorial-badge">💜 IN LOVING MEMORY 💜</div>
+            <h1>DIANE KEATON'S<br>MEMORIAL ARCADE</h1>
+            <p class="hero-quote">"I don't think that because I'm not married it's made my life any less."</p>
+            <p class="hero-description">
+                Honoring a Hollywood legend through the joy of classic gaming.<br>
+                Play retro games, earn achievements inspired by her films, and level up your legacy.
+            </p>
+            
+            <div class="hero-stats">
+                <div class="stat-box">
+                    <div class="stat-number">20</div>
+                    <div class="stat-label">GAMES</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">75+</div>
+                    <div class="stat-label">ACHIEVEMENTS</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">MEMORIES</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="nav-brand">🎮 DIANE'S ARCADE</div>
+        <div class="nav-links">
+            <a href="#games" class="nav-link">GAMES</a>
+            <a href="achievements.html" class="nav-link">ACHIEVEMENTS</a>
+            <a href="leaderboard.html" class="nav-link">LEADERBOARD</a>
+            <a href="movies.html" class="nav-link">MOVIES 🎬</a>
+            <a href="TermsofService.html" class="nav-link">TERMS</a>
+            <a href="PrivacyPolicy.html" class="nav-link">PRIVACY</a>
+            <a href="bot.html" class="nav-link bot-btn">DIANE BOT 🤖</a>
+            <a href="profile.html" class="nav-link profile-btn">MY PROFILE</a>
+        </div>
+    </nav>
+    
+    <!-- Games Section -->
+    <div class="container" id="games">
+        <h2 class="section-title">ARCADE GAMES</h2>
+        
+        <div class="games-grid">
+            <!-- Motherload -->
+            <div class="game-card">
+                <img src="https://archive.org/serve/motherload_202209/motherload_202209_screenshot.gif" alt="Motherload" class="game-image">
+                <div class="game-content">
+                    <h3>MOTHERLOAD</h3>
+                    <p class="game-creator">by XGen Studios</p>
+                    <p>Dig deep beneath the Martian surface to mine precious minerals! Upgrade your drilling pod with better fuel tanks, larger cargo bays, and more powerful drills. Watch out for hidden dangers lurking in the depths!</p>
+                    <div class="achievement-preview">
+                        <div class="achievement-mini" title="Annie Hall Digger">🎬</div>
+                        <div class="achievement-mini" title="Something's Gotta Give">💎</div>
+                        <div class="achievement-mini" title="Godfather Miner">👑</div>
+                    </div>
+                    <a href="game.html?game=motherload" class="play-btn">PLAY NOW</a>
+                </div>
+            </div>
+            
+            <!-- Happy Wheels -->
+            <div class="game-card">
+                <img src="https://archive.org/serve/billiardss/00_A.png" class="game-image">
+                <div class="game-content">
+                    <h3>HAPPY WHEELS</h3>
+                    <p class="game-creator">by Jim Bonacci (Total Jerkface)</p>
+                    <p>Choose your vehicle and character, then navigate through brutal obstacle courses filled with spikes, mines, and deadly traps! Ragdoll physics make every crash hilariously catastrophic. Can you reach the finish line in one piece?</p>
+                    <div class="achievement-preview">
+                        <div class="achievement-mini" title="First Wives Club Survivor">💪</div>
+                        <div class="achievement-mini" title="Manhattan Madness">🏙️</div>
+                        <div class="achievement-mini" title="Sleeper Hit">😴</div>
+                    </div>
+                    <a href="game.html?game=happywheels" class="play-btn">PLAY NOW</a>
+                </div>
+            </div>
+            
+            <!-- Gun Blood -->
+            <div class="game-card">
+                <img src="https://archive.org/download/gun-blood-flash-game/gunblood-menu.png" alt="Gun Blood" class="game-image" onerror="this.src='https://img.gamepix.com/games/gun-blood/cover/gun-blood.png?width=600&height=340&fit=cover'">
+                <div class="game-content">
+                    <h3>GUN BLOOD</h3>
+                    <p class="game-creator">by Wolf Games</p>
+                    <p>Test your reflexes in this intense Wild West quick-draw showdown! Face off against increasingly skilled gunslingers. Wait for the signal, then draw your weapon and shoot first! One shot, one kill – miss and you're dead!</p>
+                    <div class="achievement-preview">
+                        <div class="achievement-mini" title="Manhattan Murder Mystery">🔍</div>
+                        <div class="achievement-mini" title="Reds Sharpshooter">⭐</div>
+<div class="achievement-mini" title="Love and Death">💀</div>
+</div>
+<a href="game.html?game=gunblood" class="play-btn">PLAY NOW</a>
+</div>
+</div>
+        <!-- Raft Wars -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/raft-wars_202207/raft-wars_202207_screenshot.gif" alt="Raft Wars" class="game-image">
+            <div class="game-content">
+                <h3>RAFT WARS</h3>
+                <p class="game-creator">by Martijn Kunst (Bubble Box)</p>
+                <p>Simon and his brother found buried treasure! Now they must defend it from pirates, Vikings, and other treasure hunters. Use tennis balls as ammunition in this physics-based turn-based shooter. Aim carefully and knock enemies off their rafts!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Father of the Bride Defender">👰</div>
+                    <div class="achievement-mini" title="Baby Boom">👶</div>
+                    <div class="achievement-mini" title="Marvin's Room">🏠</div>
+                </div>
+                <a href="game.html?game=raftwars" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+        
+        <!-- Raft Wars 2 -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/miniclip_raft_wars_2/miniclip_raft_wars_2_screenshot.gif" alt="Raft Wars 2" class="game-image">
+            <div class="game-content">
+                <h3>RAFT WARS 2</h3>
+                <p class="game-creator">by Martijn Kunst (Bubble Box)</p>
+                <p>The adventure continues! Simon's treasure has been discovered by a water park developer. Fight through water park security, rival gangs, and more to reclaim what's rightfully yours! More levels, more enemies, more fun!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Baby Boom Part 2">🎬</div>
+                    <div class="achievement-mini" title="Something's Gotta Float">⛵</div>
+                    <div class="achievement-mini" title="The Good Mother">✨</div>
+                </div>
+                <a href="game.html?game=raftwars2" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+            <div class="game-card">
+            <img src="https://archive.org/serve/simpsons_swf/bandicam%202020-12-01%2011-54-07-178.jpg" alt="Raft Wars 2" class="game-image">
+            <div class="game-content">
+                <h3>The SimpsonsPac-Man </h3>
+                <p class="game-creator">by Fox Studios</p>
+                <p>A Simpsons themed Pac-Man complete with playing as Homer, donuts, and voice clips from the show.</p>
+                <div class="achievement-preview">
+
+                </div>
+                <a href="game.html?game=TheSimpsonsPac-Man" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+             <div class="game-card">
+            <img src="https://archive.org/serve/1100_the_simpsons_in_homers_beer_run/1100_the_simpsons_in_homers_beer_run_screenshot.jpg" alt="the simpsons in homers beer run" class="game-image">
+            <div class="game-content">
+                <h3>the simpsons in homers beer run </h3>
+                <p class="game-creator">by Fox Studios</p>
+                <p>Grab barrels using Homer Simpson and store them in your car.</p>
+                <div class="achievement-preview">
+
+                </div>
+                <a href="game.html?game=the_simpsons_in_homers_beer_run" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+            <div class="game-card">
+            <img src="https://archive.org/services/img/simpsons-the-ball-of-death" alt="simpsons the ball of death" class="game-image">
+            <div class="game-content">
+                <h3>simpsons the ball of death </h3>
+                <p class="game-creator">by Fox Studios</p>
+                <p>Race around the ball of death as Homer as you grab the goodies and dodge the bricks.</p>
+                <div class="achievement-preview">
+
+                </div>
+                <a href="game.html?game=simpsons_the_ball_of_death" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+            <div class="game-card">
+            <img src="https://archive.org/serve/simpsons_magic-ball/00_B.png" alt="Simpsons magic ball" class="game-image">
+            <div class="game-content">
+                <h3>Simpsons Magic Ball </h3>
+                <p class="game-creator">by Fox Studios</p>
+                <p>Magic Ball is a classic game of memory and skill. First, watch the sequence of pictures that appear in the large ball, then repeat the sequence by pressing the small balls. Make 3 wrong guesses in one round and you'll lose the game.</p>
+                <div class="achievement-preview">
+
+                </div>
+                <a href="game.html?game=simpsons_magic_ball" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+        
+        <!-- Robot Unicorn Attack -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/robotunicornattack_flash/RobotUnicornAttack_screenshot.jpg" alt="Robot Unicorn Attack" class="game-image">
+            <div class="game-content">
+                <h3>ROBOT UNICORN ATTACK</h3>
+                <p class="game-creator">by Adult Swim Games (Spiritonin Media)</p>
+                <p>Gallop through a mystical dreamscape of rainbows, stars, and heavy metal! Jump over gaps, smash through stars, and dash through obstacles. Featuring the iconic "Always" by Erasure soundtrack. Chase your dreams... ALWAYS!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Play It Again, Sam">🎭</div>
+                    <div class="achievement-mini" title="Shoot the Moon">🌙</div>
+                    <div class="achievement-mini" title="Morning Glory">🌅</div>
+                </div>
+                <a href="game.html?game=robotunicornattack" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+
+        <!-- Retro Unicorn Attack -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/retro-unicorn-attack/retro-unicorn-attack_screenshot.gif" alt="Retro Unicorn Attack" class="game-image">
+            <div class="game-content">
+                <h3>RETRO UNICORN ATTACK</h3>
+                <p class="game-creator">by AdultSwim</p>
+                <p>Dash through dreamlike worlds in this neon runner! Smash stars, chase rainbows, and survive as long as you can to the rhythm of pure 80s synth magic.</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Rainbow Master">🌈</div>
+                    <div class="achievement-mini" title="Dream Runner">💫</div>
+                    <div class="achievement-mini" title="Never Stop Believing">🎶</div>
+                </div>
+                <a href="game.html?game=retrounicornattack" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+            <!-- Robot Unicorn Attack Heavy Metal -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/ruahm/ruahm_screenshot.gif" alt="Robot Unicorn Attack Heavy Metal" class="game-image">
+            <div class="game-content">
+                <h3>ROBOT UNICORN ATTACK: HEAVY METAL</h3>
+                <p class="game-creator">by Adult Swim Games</p>
+                <p>The darker, heavier version of Robot Unicorn Attack! Gallop through a gothic fantasy world with a heavy metal soundtrack. Jump, dash, and destroy everything in your path. Metal never dies!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Interiors">🏚️</div>
+                    <div class="achievement-mini" title="Night, Mother">🌙</div>
+                    <div class="achievement-mini" title="The Only Living Boy">🎸</div>
+                </div>
+                <a href="game.html?game=ruahm" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+        
+        <!-- Earn to Die -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/etd_20220311/etd_20220311_screenshot.gif" alt="Earn to Die" class="game-image">
+            <div class="game-content">
+                <h3>EARN TO DIE</h3>
+                <p class="game-creator">by Toffee Games (Not Doppler)</p>
+                <p>The zombie apocalypse is here! Drive your car through hordes of undead, earning money to upgrade your vehicle with armor, weapons, and bigger engines. Each run gets you closer to the evacuation helicopter. Survive or die trying!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Looking for Mr. Goodbar">🍫</div>
+                    <div class="achievement-mini" title="Running Mates">🏃</div>
+                    <div class="achievement-mini" title="Mrs. Soffel Survivor">🚗</div>
+                </div>
+                <a href="game.html?game=earntodie" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+
+        <!-- Earn to Die 2012 -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/earntodie2012/earntodie2012_screenshot.gif" alt="Earn to Die 2012" class="game-image">
+            <div class="game-content">
+                <h3>EARN TO DIE 2012</h3>
+                <p class="game-creator">by Toffee Games</p>
+                <p>Blast through zombie hordes in your upgraded vehicles! Earn cash, upgrade engines, and survive the apocalypse in this side-scrolling car survival hit.</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Zombie Roadkill">🧟‍♂️</div>
+                    <div class="achievement-mini" title="Fuel Master">⛽</div>
+                    <div class="achievement-mini" title="Apocalypse Racer">🚗</div>
+                </div>
+                <a href="game.html?game=earntodie2012" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+
+        <!-- Earn to Die 2016 -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/earntodie2016/earntodie2016_screenshot.gif" alt="Earn to Die 2016" class="game-image">
+            <div class="game-content">
+                <h3>EARN TO DIE 2016</h3>
+                <p class="game-creator">by Toffee Games</p>
+                <p>Return to the zombie apocalypse! Smash, upgrade, and power through new wastelands with improved graphics, vehicles, and endless destruction.</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Undead Crusher">💀</div>
+                    <div class="achievement-mini" title="Maxed Out">🔧</div>
+                    <div class="achievement-mini" title="Road Warrior">🔥</div>
+                </div>
+                <a href="game.html?game=EarntoDie2016" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+
+        <!-- Earn to Die Part 2 -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/earntodiepart2/earntodiepart2_screenshot.gif" alt="Earn to Die Part 2" class="game-image">
+            <div class="game-content">
+                <h3>EARN TO DIE PART 2</h3>
+                <p class="game-creator">by Toffee Games</p>
+                <p>The ultimate sequel! Bigger levels, deadlier zombies, and insane vehicles. Build your perfect zombie-smashing machine and escape the chaos once again.</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Full Throttle">⚙️</div>
+                    <div class="achievement-mini" title="Zombie Obliterator">🧟</div>
+                    <div class="achievement-mini" title="High Octane">🏁</div>
+                </div>
+                <a href="game.html?game=EarntoDiePart2" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+        
+        <!-- Bush Shootout -->
+        <div class="game-card">
+            <img src="https://i.ytimg.com/vi/ykZC9y5R5TY/maxresdefault.jpg" alt="Bush Shootout" class="game-image">
+            <div class="game-content">
+                <h3>BUSH SHOOTOUT</h3>
+                <p class="game-creator">by Miniclip (Flash Archive)</p>
+                <p>A nostalgic relic from the early 2000s Flash gaming era! Political parody shooter where you take aim and rack up points. A time capsule of internet culture from a different era. Simple, silly, and totally retro!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Reds Revolutionary">⭐</div>
+                    <div class="achievement-mini" title="Radio Days">📻</div>
+                    <div class="achievement-mini" title="Crimes and Misdemeanors">⚖️</div>
+                </div>
+                <a href="game.html?game=bushshootout" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+        
+        <!-- Candy Machine -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/flash_candymachinedeluxe/flash_candymachinedeluxe_screenshot.png" alt="Candy Machine" class="game-image">
+            <div class="game-content">
+                <h3>Ed, Edd n Eddy's Candy Machine DELUXE</h3>
+                <p class="game-creator">by THIS IS POP and published by Cartoon Network Studios</p>
+                <p>Match colorful candies in this sweet puzzle adventure! Create special candy combinations for explosive effects. Clear levels, beat high scores, and satisfy your digital sweet tooth in this addictive match-3 classic!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Because I Said So">🎀</div>
+                    <div class="achievement-mini" title="The Family Stone">💍</div>
+                    <div class="achievement-mini" title="Morning Glory">🌅</div>
+                </div>
+                <a href="game.html?game=candymachine" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+
+        <!-- Jawbreaker -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/flash_jawbreaker/flash_jawbreaker_screenshot.gif" alt="Jawbreaker" class="game-image">
+            <div class="game-content">
+                <h3>Ed, Edd n Eddy's Candy Machine</h3>
+                <p class="game-creator">by THIS IS POP and published by Cartoon Network Studios</p>
+                <p>Smash, chomp, and blast through walls of colorful candy! Use combos and power-ups to rack up massive scores and keep the jawbreaker frenzy going.</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Sweet Tooth">🍬</div>
+                    <div class="achievement-mini" title="Combo Crusher">💥</div>
+                    <div class="achievement-mini" title="Candy Storm">🍭</div>
+                </div>
+                <a href="game.html?game=jawbreaker" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+        
+        <!-- Gold Miner -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/gold01_202103_flash/gold01_202103_flash_screenshot.gif" alt="Gold Miner" class="game-image">
+            <div class="game-content">
+                <h3>GOLD MINER</h3>
+                <p class="game-creator">by Miniclip</p>
+                <p>Swing your claw and grab precious treasures! Snag gold nuggets, diamonds, and money bags while avoiding worthless rocks. Race against time to reach your goal in each level. The bigger the treasure, the heavier it is!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="The Little Drummer Girl">🥁</div>
+                    <div class="achievement-mini" title="Mad Money">💰</div>
+                    <div class="achievement-mini" title="Town and Country">🌾</div>
+                </div>
+                <a href="game.html?game=gold01" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+        
+        <!-- Tom and Jerry Bowling -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/tom-and-jerry-bowling/00_B.png" alt="Tom & Jerry Bowling" class="game-image">
+            <div class="game-content">
+                <h3>TOM & JERRY BOWLING</h3>
+                <p class="game-creator">by Cartoon Network Games</p>
+                <p>Join the legendary cat and mouse duo for cartoon bowling action! Choose your character, aim carefully, and knock down pins for strikes and spares. Classic cartoon fun meets bowling in this family-friendly game!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Something's Gotta Strike">🎳</div>
+                    <div class="achievement-mini" title="The Big Picture">📺</div>
+                    <div class="achievement-mini" title="Hanging Up">📞</div>
+                </div>
+                <a href="game.html?game=tomandjerrybowling" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+            <div class="game-card">
+            <img src="https://static.wikia.nocookie.net/theamazingworldofgumball/images/2/21/Battle_Bowlers.jpg/revision/latest/scale-to-width-down/400?cb=20200131180917" alt="Battle Bowlers" class="game-image">
+            <div class="game-content">
+                <h3>Battle Bowlers</h3>
+                <p class="game-creator">by Cartoon Network Games</p>
+                <p>Battle Bowlers is a game where players knock down mutant bowling pins by throwing a bowling ball, similar to an arcade shooter.</p>
+                <div class="achievement-preview">
+
+                </div>
+                <a href="game.html?game=Battle Bowlers" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+            </div>
+            <div class="game-card">
+            <img src="https://static.wikia.nocookie.net/spongebob/images/e/e7/B.C._Bowling.png/revision/latest/scale-to-width-down/267?cb=20150308064309" alt="SpongeBob bcbowling" class="game-image">
+            <div class="game-content">
+                <h3>SpongeBob bcbowling</h3>
+                <p class="game-creator">by Nickaloden Studioss</p>
+                <p>In this game, you play as SpongeGar and go bowling. Patar keeps track of how many logs (pins) are knocked down. There are 10 frames in each game. In each frame, the player has two chances to knock all the logs down. The game ends after 10 rounds.</p>
+                <div class="achievement-preview">
+
+                </div>
+                <a href="game.html?game=SpongeBob_bcbowling" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+        <!-- Hive Hero -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/miniclip_hive_hero/miniclip_hive_hero_screenshot.gif" alt="Hive Hero" class="game-image">
+            <div class="game-content">
+                <h3>HIVE HERO</h3>
+                <p class="game-creator">by FlashGameStudio</p>
+                <p>Become the ultimate bee! Collect pollen from flowers, defend your hive from invading wasps and hornets, and build the strongest bee colony. Manage your hive, upgrade your workers, and become the hero your colony needs!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="The Bee Movie Reference">🐝</div>
+                    <div class="achievement-mini" title="Queen Bee">👑</div>
+                    <div class="achievement-mini" title="Pollen Collector">🌸</div>
+                </div>
+                <a href="game.html?game=hive-hero" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+
+        <!-- TJ Trapomatic -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/tj_trapomatic/tj_trapomatic_screenshot.gif" alt="TJ Trapomatic" class="game-image">
+            <div class="game-content">
+                <h3>TJ TRAPOMATIC</h3>
+                <p class="game-creator">by ToonJet Studios</p>
+                <p>Help TJ set up elaborate contraptions to solve hilarious challenges! A creative puzzle game packed with cartoon humor and wacky physics.</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Master Inventor">🧠</div>
+                    <div class="achievement-mini" title="Perfect Setup">🎯</div>
+                    <div class="achievement-mini" title="Cartoon Genius">🎨</div>
+                </div>
+                <a href="game.html?game=tj_trapomatic" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+            <div class="game-card">
+            <img src="https://i.ytimg.com/vi/EpV6w8aStCc/hqdefault.jpg" alt="Snow Line" class="game-image">
+            <div class="game-content">
+                <h3>Snow Line</h3>
+                <p class="game-creator">by Miniclip</p>
+                <p>Snow Line is a Christmas-themed puzzle game where players help Santa Claus, who is unable to use his reindeer, collect scattered presents by drawing snow lines with their mouse. The goal is to draw a path that guides Santa and his sled to all the presents on a level, avoiding obstacles and collecting power-ups along the way.</p>
+                <div class="achievement-preview">
+                </div>
+                <a href="game.html?game=SnowLine" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+            <div class="game-card">
+            <img src="https://www.primarygames.com/holidays/christmas/games/snowline2/logo200.png" alt="Snow Line 2" class="game-image">
+            <div class="game-content">
+                <h3>Snow Line 2</h3>
+                <p class="game-creator">by Miniclip</p>
+                <p>Snow Line 2 is a puzzle-style game by Iriysoft published by Miniclip where players, as Mrs. Santa, draw lines to help Santa collect presents scattered across the Arctic before Christmas.</p>
+                <div class="achievement-preview">
+                </div>
+                <a href="game.html?game=SnowLine2" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+            </div>
+            <div class="game-card">
+            <img src="https://archive.org/serve/1100_britney_brawl_featuring_bill_vs_britney/1100_britney_brawl_featuring_bill_vs_britney_screenshot.jpg" alt="britney_brawl" class="game-image">
+            <div class="game-content">
+                <h3>britney_brawl</h3>
+                <p class="game-creator">by Miniclip</p>
+                <p>Britney Brawl Featuring Bill Clinton</p>
+                <div class="achievement-preview">
+                </div>
+                <a href="game.html?game=britney_brawl_featuring_bill_vs_britney" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+        </div>
+            </div>
+            <div class="game-card">
+            <img src="https://archive.org/serve/1100_bush_vs_kerry/1100_bush_vs_kerry_screenshot.jpg" alt="bush_vs_kerry" class="game-image">
+            <div class="game-content">
+                <h3>bush_vs_kerry</h3>
+                <p class="game-creator">by Miniclip</p>
+                <p> Bush vs. Kerry Is a political Presidential Knockout</p>
+                <div class="achievement-preview">
+                </div>
+                <a href="game.html?game=bush_vs_kerry" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+        
+        <!-- Rick and Morty -->
+        <div class="game-card">
+            <img src="https://archive.org/serve/rick-and-mortys-rushed-licensed-adventure/Rick%20and%20Morty's%20Rushed%20Licensed%20Adventure%20sceenshot.jpg" alt="Rick and Morty" class="game-image">
+            <div class="game-content">
+                <h3>RICK AND MORTY</h3>
+                <p class="game-creator">by Adult Swim Games</p>
+                <p>Wubba lubba dub dub! Join Rick and Morty on an interdimensional adventure through portals and alternate realities. Solve puzzles, fight aliens, collect items, and survive the multiverse in this action-packed adventure!</p>
+                <div class="achievement-preview">
+                    <div class="achievement-mini" title="Get Schwifty">🎤</div>
+                    <div class="achievement-mini" title="Portal Master">🌀</div>
+                    <div class="achievement-mini" title="Pickle Rick">🥒</div>
+                </div>
+                <a href="game.html?game=rickandmorty" class="play-btn">PLAY NOW</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Achievements Button -->
+<div class="container">
+    <div style="text-align: center; margin: 80px 0;">
+        <a href="achievements.html" style="
+            display: inline-block;
+            padding: 20px 60px;
+            background: linear-gradient(135deg, #00f3ff, #bf00ff);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.3em;
+            letter-spacing: 3px;
+            transition: all 0.4s;
+            box-shadow: 0 8px 40px rgba(0, 243, 255, 0.5);
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        ">
+            🏆 VIEW ALL 75+ ACHIEVEMENTS
+        </a>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    <h3>IN MEMORY OF DIANE KEATON</h3>
+    <p>January 5, 1946 - October 11, 2025</p>
+    <p style="font-size: 1.2em; margin: 20px 0;">Forever in Our Hearts ❤️</p>
+    <p>Academy Award Winner • Director • Fashion Icon • Legend</p>
+    <p style="margin-top: 30px; font-size: 1em; max-width: 800px; margin-left: auto; margin-right: auto;">
+        "This arcade preserves classic Flash games in honor of Diane's timeless legacy.<br>
+        Her films taught us to laugh, love, and never take life too seriously."
+    </p>
+    
+    <div class="footer-links">
+        <a href="#games" class="footer-link">GAMES</a>
+        <a href="achievements.html" class="footer-link">ACHIEVEMENTS</a>
+        <a href="leaderboard.html" class="footer-link">LEADERBOARD</a>
+        <a href="TermsofService.html" class="footer-link">TERMS</a>
+        <a href="PrivacyPolicy.html" class="footer-link">PRIVACY</a>
+        <a href="bot.html" class="footer-link">DIANE BOT 🤖</a>
+        <a href="profile.html" class="footer-link">PROFILE</a>
+        <a href="movies.html" class="footer-link">MOVIES 🎬</a>
+        <a href="https://discord.gg/jR8tcWF" class="footer-link" target="_blank">DISCORD</a>
+    </div>
+    
+    <p style="margin-top: 40px; font-size: 0.9em; opacity: 0.6;">
+        © 2025 Diane Keaton Memorial Arcade • Powered by Game Killers Studio<br>
+        Game Powered by Ruffle Flash Emulator All games are property of their respective creators<br>
+        Games preserved for educational and nostalgic purposes
+    </p
+    
+    <p style="margin-top: 20px; font-size: 0.85em; opacity: 0.5;">
+        Created with ❤️ by Game Killers Studio™
+    </p>
+</div>

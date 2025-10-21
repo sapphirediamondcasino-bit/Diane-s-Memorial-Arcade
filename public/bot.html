@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diane Keaton Bot - AI Learning Assistant | Memorial Tribute</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --dark-bg: #050510;
+            --darker: #020208;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 49%, rgba(0, 243, 255, 0.03) 50%, transparent 51%),
+                linear-gradient(0deg, transparent 49%, rgba(0, 243, 255, 0.03) 50%, transparent 51%);
+            background-size: 50px 50px;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .hero-images {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 20px;
+            opacity: 0.25;
+            filter: grayscale(30%) brightness(0.7);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .hero-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            animation: imageFloat 8s ease-in-out infinite;
+        }
+        
+        .hero-images img:nth-child(1) { animation-delay: 0s; }
+        .hero-images img:nth-child(2) { animation-delay: 2s; }
+        .hero-images img:nth-child(3) { animation-delay: 4s; }
+        .hero-images img:nth-child(4) { animation-delay: 6s; }
+        .hero-images img:nth-child(5) { animation-delay: 1s; }
+        .hero-images img:nth-child(6) { animation-delay: 3s; }
+        .hero-images img:nth-child(7) { animation-delay: 5s; }
+        .hero-images img:nth-child(8) { animation-delay: 7s; }
+        
+        @keyframes imageFloat {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.25; }
+            50% { transform: translateY(-20px) scale(1.05); opacity: 0.35; }
+        }
+        
+        .memorial-hero {
+            position: relative;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 4px solid var(--neon-blue);
+            box-shadow: 0 10px 80px rgba(0, 243, 255, 0.5);
+            z-index: 10;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            text-align: center;
+            padding: 80px 50px;
+            background: rgba(5, 5, 16, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 3px solid var(--neon-blue);
+            max-width: 1100px;
+            box-shadow: 
+                0 0 80px rgba(0, 243, 255, 0.6),
+                inset 0 0 60px rgba(0, 243, 255, 0.1);
+        }
+        
+        .memorial-badge {
+            display: inline-block;
+            padding: 15px 50px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            border-radius: 50px;
+            margin-bottom: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.2em;
+            letter-spacing: 4px;
+            box-shadow: 0 0 50px var(--neon-purple);
+            animation: memorialPulse 3s ease infinite;
+        }
+        
+        @keyframes memorialPulse {
+            0%, 100% { 
+                box-shadow: 0 0 50px var(--neon-purple);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 100px var(--neon-purple), 0 0 150px var(--neon-pink);
+                transform: scale(1.05);
+            }
+        }
+        
+        .bot-avatar-large {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid var(--neon-blue);
+            margin: 30px auto;
+            box-shadow: 0 0 60px var(--neon-blue);
+            animation: avatarGlow 3s ease infinite;
+        }
+        
+        @keyframes avatarGlow {
+            0%, 100% { box-shadow: 0 0 60px var(--neon-blue); }
+            50% { box-shadow: 0 0 100px var(--neon-blue), 0 0 140px var(--neon-purple); }
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5em;
+            font-weight: 900;
+            margin: 30px 0;
+            background: linear-gradient(135deg, var(--neon-blue) 0%, var(--neon-purple) 50%, var(--neon-pink) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 5px;
+            line-height: 1.2;
+        }
+        
+        .ai-badge {
+            display: inline-block;
+            padding: 12px 35px;
+            background: rgba(0, 243, 255, 0.2);
+            border: 2px solid var(--neon-blue);
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            margin: 20px 0;
+            box-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        .hero-description {
+            font-size: 1.3em;
+            line-height: 1.9;
+            margin: 30px 0;
+            opacity: 0.9;
+        }
+        
+        .hero-quote {
+            font-size: 1.2em;
+            font-style: italic;
+            color: var(--neon-purple);
+            margin: 30px 0;
+            padding: 25px;
+            border-left: 4px solid var(--neon-purple);
+            background: rgba(191, 0, 255, 0.1);
+            border-radius: 10px;
+            text-shadow: 0 0 20px var(--neon-purple);
+        }
+        
+        .invite-button {
+            display: inline-block;
+            padding: 25px 70px;
+            background: linear-gradient(135deg, var(--neon-blue) 0%, var(--neon-purple) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.5em;
+            letter-spacing: 3px;
+            margin: 30px 15px;
+            box-shadow: 0 10px 60px rgba(0, 243, 255, 0.6);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .invite-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .invite-button:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+        
+        .invite-button:hover {
+            box-shadow: 0 20px 100px rgba(0, 243, 255, 1);
+            transform: translateY(-5px) scale(1.05);
+        }
+        
+        .support-button {
+            display: inline-block;
+            padding: 18px 45px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            margin: 15px;
+            box-shadow: 0 5px 30px var(--neon-purple);
+            transition: all 0.3s;
+        }
+        
+        .support-button:hover {
+            box-shadow: 0 10px 50px var(--neon-purple);
+            transform: translateY(-3px);
+        }
+        
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(5, 5, 16, 0.98);
+            backdrop-filter: blur(30px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--neon-blue);
+            box-shadow: 0 5px 40px rgba(0, 243, 255, 0.4);
+            z-index: 2000;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5em;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-shadow: 0 0 20px var(--neon-blue);
+            letter-spacing: 2px;
+        }
+        .nav-logo {
+             height: 40px; /* Adjust size */
+             width: auto;
+             margin-right: 8px;
+             vertical-align: middle;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            text-decoration: none;
+            padding: 12px 28px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 30px;
+            transition: all 0.3s;
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 0.9em;
+        }
+        
+        .nav-link:hover {
+            background: var(--neon-blue);
+            color: var(--darker);
+            box-shadow: 0 0 30px var(--neon-blue);
+            transform: translateY(-3px);
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 80px auto;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3em;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 200px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            margin: 30px auto;
+            border-radius: 10px;
+            box-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        .commands-section {
+            background: rgba(5, 5, 16, 0.85);
+            border: 3px solid var(--neon-purple);
+            border-radius: 30px;
+            padding: 60px 40px;
+            margin: 80px 0;
+            box-shadow: 0 0 60px rgba(191, 0, 255, 0.3);
+        }
+        
+        .intro-text {
+            text-align: center;
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: rgba(191, 0, 255, 0.1);
+            border-radius: 20px;
+            border: 2px solid var(--neon-purple);
+        }
+        
+        .command-category {
+            margin-bottom: 50px;
+        }
+        
+        .category-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em;
+            font-weight: 900;
+            color: var(--neon-purple);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--neon-purple);
+            letter-spacing: 2px;
+        }
+        
+        .command-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .command {
+            background: rgba(191, 0, 255, 0.1);
+            border: 2px solid var(--neon-purple);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+        
+        .command:hover {
+            background: rgba(191, 0, 255, 0.2);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 30px var(--neon-purple);
+            transform: translateY(-5px);
+        }
+        
+        .command-name {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-pink);
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        
+        .command-desc {
+            font-size: 1em;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #ff6600, #ff0000);
+            border-radius: 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            margin: 30px 0;
+            box-shadow: 0 0 40px #ff0000;
+            animation: rolePulse 2s ease infinite;
+        }
+
+        @keyframes rolePulse {
+            0%, 100% { box-shadow: 0 0 40px #ff0000; }
+            50% { box-shadow: 0 0 70px #ff0000, 0 0 100px #ff6600; }
+        }
+        
+        .footer {
+            margin-top: 120px;
+            padding: 80px 40px;
+            background: var(--darker);
+            border-top: 4px solid var(--neon-blue);
+            text-align: center;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .footer h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: var(--neon-blue);
+            margin-bottom: 25px;
+            text-shadow: 0 0 30px var(--neon-blue);
+        }
+        
+        .footer p {
+            font-size: 1.1em;
+            margin: 15px 0;
+            opacity: 0.8;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: var(--neon-blue);
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        .footer-link:hover {
+            color: var(--neon-purple);
+            text-shadow: 0 0 15px var(--neon-purple);
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.8em; }
+            .hero-images { grid-template-columns: repeat(2, 1fr); }
+            .command-list { grid-template-columns: 1fr; }
+            .nav-bar { flex-direction: column; }
+            .invite-button { font-size: 1.2em; padding: 20px 50px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-images">
+        <img src="https://bdc2020.o0bc.com/wp-content/uploads/2025/10/Obit_Diane_Keaton_46755-68eab8c201b3c-scaled.jpg" alt="Diane Keaton">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Diane_Keaton_2012-1_%28cropped%29_%28cropped%29.jpg" alt="Diane Keaton">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2e8SpsTnRDB-VliZnuKaCLJZs_lDxQiTcnyhmrSiPDIEBkB9c8x1Tcdx04QmmQfF_SOo&usqp=CAU" alt="Diane Keaton">
+        <img src="https://media.cnn.com/api/v1/images/stellar/prod/220814151830-diane-keaton-2022-tcl-chinese-theatre.jpg?c=original" alt="Diane Keaton">
+        <img src="https://m.media-amazon.com/images/M/MV5BMTY5NDI5OTEyOF5BMl5BanBnXkFtZTgwMzU4NDI1NzM@._V1_.jpg" alt="Diane Keaton">
+        <img src="https://s.france24.com/media/display/f83d67d8-a6d7-11f0-a4c0-005056a97e36/w:1280/p:16x9/AP23252847066711.jpg" alt="Diane Keaton">
+        <img src="https://static.wikia.nocookie.net/godfather/images/0/0f/Keaton.jpg/revision/latest?cb=20071012160246" alt="Diane Keaton">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/57/Mad_money_post.jpg/250px-Mad_money_post.jpg" alt="Diane Keaton">
+    </div>
+
+    <div class="memorial-hero">
+        <div class="hero-content">
+            <div class="memorial-badge">💜 DIANE KEATON AI BOT 💜</div>
+            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Diane_Keaton_2012-1_%28cropped%29_%28cropped%29.jpg" 
+                 alt="Diane Keaton Bot" 
+                 class="bot-avatar-large"
+                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 150 150%27%3E%3Ccircle cx=%2775%27 cy=%2775%27 r=%2775%27 fill=%27%2300f3ff%27/%3E%3Ctext x=%2775%27 y=%2795%27 font-size=%2770%27 text-anchor=%27middle%27 fill=%27white%27%3E🤖%3C/text%3E%3C/svg%3E'">
+            
+            <h1>DIANE KEATON BOT</h1>
+            
+            <div class="ai-badge">🧠 SELF-LEARNING AI ASSISTANT</div>
+            
+            <p class="hero-description">
+                Honoring Diane Keaton's legacy through education and joy.<br>
+                An AI-powered learning assistant that helps with homework, teaches subjects,<br>
+                and brings classic gaming to Discord - all in memory of a Hollywood legend.
+            </p>
+            
+            <div class="hero-quote">
+                "I think that the joy in attending to something outside of yourself<br>
+                and giving your time to something is a joyful thing."<br>
+                <strong>- Diane Keaton</strong>
+            </div>
+
+            <div class="role-badge">🔥 Game Killers Studio SUPER ADMIN 🔥</div>
+            <p style="font-size: 1.1em; margin-top: 20px; opacity: 0.9;">
+                Game Killer Studios - Full control (cannot be changed)
+            </p>
+            
+            <div style="margin-top: 40px;">
+                <a href="https://discord.com/oauth2/authorize?client_id=1039406042796269590&permissions=2150688768&integration_type=0&scope=bot+applications.commands" 
+                   class="invite-button" 
+                   target="_blank">
+                    🤖 INVITE DIANE TO YOUR SERVER
+                </a>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <a href="index.html" class="support-button">
+                    🎮 VISIT ARCADE
+                </a>
+                <a href="https://discord.gg/jR8tcWF" class="support-button" target="_blank">
+                    💬 SUPPORT SERVER
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <nav class="nav-bar">
+        <div class="nav-brand">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Diane_Keaton_2012-1_%28cropped%29_%28cropped%29.jpg" alt="Diane Bot Logo" class="nav-logo">
+        DIANE BOT
+    </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">HOME</a>
+            <a href="achievements.html" class="nav-link">ACHIEVEMENTS</a>
+            <a href="leaderboard.html" class="nav-link">LEADERBOARD</a>
+            <a href="movies.html" class="nav-link">MOVIES 🎬</a>
+            <a href="profile.html" class="nav-link">MY PROFILE</a>
+            <a href="terms.html" class="nav-link">TERMS</a>
+            <a href="privacy.html" class="nav-link">PRIVACY</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="commands-section">
+            <h2 class="section-title" style="color: var(--neon-purple);">ALL COMMANDS</h2>
+            
+            <div class="intro-text">
+                <strong>Here's everything we can do together!</strong><br>
+                Remember - you can also just talk to me naturally. I'm always listening.
+            </div>
+            
+            <div class="command-category">
+                <div class="category-title">📚 Schedule Classes</div>
+                <div class="command-list">
+                    <div class="command">
+                        <div class="command-name">/expand</div>
+                        <div class="command-desc">Add admin-verified knowledge to Diane's database (she also self-learns!)</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/override</div>
+                        <div class="command-desc">Use admin functions (Super Admin only)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="command-category">
+                <div class="category-title">💬 Just Talk to Me</div>
+                <div style="padding: 30px; background: rgba(0, 243, 255, 0.1); border-radius: 20px; border: 2px solid var(--neon-blue); text-align: center;">
+                    <p style="font-size: 1.2em; line-height: 1.8;">
+                        <strong>Mention me in chat or send me a DM.</strong><br>
+                        I'm here for you - whether it's homework help, life advice, or just to chat.<br>
+                        You don't always need a command - just talk to me naturally!
+                    </p>
+                </div>
+            </div>
+
+            <div class="command-category" style="margin-top: 60px;">
+                <div class="category-title">🔥 Quick Start - Super Admin</div>
+                <div style="padding: 40px; background: linear-gradient(135deg, rgba(255, 102, 0, 0.2), rgba(255, 0, 0, 0.2)); border-radius: 20px; border: 3px solid #ff0000; box-shadow: 0 0 40px rgba(255, 0, 0, 0.4);">
+                    <h3 style="font-family: 'Orbitron', sans-serif; font-size: 2em; color: #ff6600; margin-bottom: 25px; text-shadow: 0 0 20px #ff6600;">Full Control:</h3>
+                    <ul style="list-style: none; font-size: 1.2em; line-height: 2;">
+                        <li>• Use <strong style="color: #ff6600;">/override</strong> for admin functions</li>
+                        <li>• Use <strong style="color: #ff6600;">/expand</strong> to add knowledge</li>
+                        <li>• All admin commands are locked to Game Killers Studios Basic Admin Is avalible to Server admins</li>
+                        <li>• Cannot be removed or changed</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div style="background: rgba(5, 5, 16, 0.7); border: 3px solid var(--neon-pink); border-radius: 30px; padding: 80px 40px; text-align: center; box-shadow: 0 0 60px rgba(255, 0, 255, 0.4); margin: 80px 0;">
+            <h2 style="font-family: Orbitron; font-size: 3em; color: var(--neon-pink); text-shadow: 0 0 30px var(--neon-pink); margin-bottom: 30px;">
+                READY TO START LEARNING?
+            </h2>
+            <p style="font-size: 1.3em; line-height: 1.8; margin: 30px 0; opacity: 0.9;">
+                Add Diane Keaton Bot to your Discord server today!<br>
+                Get AI-powered tutoring, and access to 20 classic arcade games.<br>
+                Honor Diane's legacy through education and joy.
+            </p>
+            <a href="https://discord.com/oauth2/authorize?client_id=1039406042796269590&permissions=2150688768&integration_type=0&scope=bot+applications.commands" 
+               class="invite-button" 
+               target="_blank"
+               style="margin-top: 30px;">
+                🚀 ADD TO DISCORD NOW
+            </a>
+            <p style="font-size: 1em; margin-top: 30px; opacity: 0.7;">
+                • 100% Free Forever – Diane Keaton is one of a kind and will never charge.<br>
+                • No premium tiers – every feature is available to everyone.<br>
+                • Always learning – she grows smarter and more capable with every interaction.
+            </p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <h3>IN MEMORY OF DIANE KEATON</h3>
+        <p>January 5, 1946 - October 11, 2025</p>
+        <p style="font-size: 1.2em; margin: 20px 0;">Forever in Our Hearts ❤️</p>
+        <p>Academy Award Winner • Director • Fashion Icon • Legend</p>
+        <p style="margin-top: 30px; font-size: 1.1em; max-width: 800px; margin-left: auto; margin-right: auto;">
+            "This bot honors Diane's passion for learning, teaching, and bringing joy to others.<br>
+            Through AI-powered education and classic gaming, her spirit of curiosity and fun lives on."
+        </p>
+        
+        <div class="footer-links">
+            <a href="index.html" class="footer-link">GAMES</a>
+            <a href="achievements.html" class="footer-link">ACHIEVEMENTS</a>
+            <a href="leaderboard.html" class="footer-link">LEADERBOARD</a>
+            <a href="TermsofService.html" class="footer-link">TERMS</a>
+            <a href="PrivacyPolicy.html" class="footer-link">PRIVACY</a>
+            <a href="profile.html" class="footer-link">PROFILE</a>
+            <a href="movies.html" class="footer-link">MOVIES 🎬</a>
+            <a href="https://discord.gg/jR8tcWF" class="footer-link" target="_blank">DISCORD</a>
+        </div>
+        
+        <p style="margin-top: 40px; font-size: 0.9em; opacity: 0.6;">
+            © 2025 Diane Keaton Memorial Arcade • Powered by AI & Love<br>
+            Self-Learning AI • Educational Tool • Classic Game Preservation<br>
+            Created with ❤️ by Game Killers Studio™
+        </p>
+    </div>
+</body>
+</html>
+                <div class="command-category">
+    <div class="category-title">📚 Class With Diane Keaton</div>
+    <div class="command-list">
+        <div class="command">
+            <div class="command-name">/book</div>
+            <div class="command-desc">Schedule a class with Diane</div>
+        </div>
+        <div class="command">
+            <div class="command-name">/cancel</div>
+            <div class="command-desc">Cancel or reschedule a booked class</div>
+        </div>
+        <div class="command">
+            <div class="command-name">/openings</div>
+            <div class="command-desc">See when Diane is available to teach</div>
+        </div>
+        <div class="command">
+            <div class="command-name">/schedule</div>
+            <div class="command-desc">View your upcoming and past classes with Diane</div>
+        </div>
+        <div class="command">
+            <div class="command-name">/join</div>
+            <div class="command-desc">Join Class - Select a class (will be updated to work with /book)</div>
+        </div>
+    </div>
+</div>
+
+            
+            <div class="command-category">
+                <div class="category-title">💡 Get to Know Me</div>
+                <div class="command-list">
+                    <div class="command">
+                        <div class="command-name">/about</div>
+                        <div class="command-desc">Learn about Diane Keaton and this bot</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/help</div>
+                        <div class="command-desc">See all commands and what Diane can do</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/stats</div>
+                        <div class="command-desc">See Diane's current intelligence level and server stats</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="command-category">
+                <div class="category-title">⚙️ Admin Tools</div>
+                <div class="command-list">
+                    <div class="command">
+                        <div class="command-name">/capacity</div>
+                        <div class="command-desc">Check how many classes Diane can teach in this server</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/friend</div>
+                        <div class="command-desc">Manage friendship with Diane</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/approvescore</div>
+                        <div class="command-desc">Approve a submitted score (Admin only)</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/discipline</div>
+                        <div class="command-desc">Manage student discipline (Admin only)</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/expand</div>
+                        <div class="command-desc">Add admin-verified knowledge to Diane's database (she also self-learns!)</div>
+                    </div>
+                    <div class="command-list">
+                    <div class="command">
+                        <div class="command-name">/ask [question]</div>
+                        <div class="command-desc">Ask me anything! I'll explain concepts, solve problems, and help you understand any topic.</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/teach [subject]</div>
+                        <div class="command-desc">Get a personalized lesson on any subject - math, science, history, literature, and more!</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/homework [problem]</div>
+                        <div class="command-desc">Need homework help? I'll guide you through the solution step-by-step.</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/quiz [subject]</div>
+                        <div class="command-desc">Test your knowledge with interactive quizzes! Earn XP and level up!</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/explain [concept]</div>
+                        <div class="command-desc">Get detailed explanations of complex concepts in simple terms.</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/study [topic]</div>
+                        <div class="command-desc">Create custom study guides and flashcards for any topic.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="command-category">
+                <div class="category-title">🎮 ARCADE & GAMING</div>
+                <div class="command-list">
+                    <div class="command">
+                        <div class="command-name">/arcade</div>
+                        <div class="command-desc">Browse all 20 available retro arcade games with descriptions and images. More Coming Soon!</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/play [game]</div>
+                        <div class="command-desc">Start playing your favorite classic Flash game directly in Discord!</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/games</div>
+                        <div class="command-desc">See the complete list of games: Motherload, Happy Wheels, Gun Blood, and more!</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/gamescore [game]</div>
+                        <div class="command-desc">View high scores and leaderboards for each game.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="command-category">
+                <div class="category-title">🏆 PROGRESS & ACHIEVEMENTS</div>
+                <div class="command-list">
+                    <div class="command">
+                        <div class="command-name">/profile [@user]</div>
+                        <div class="command-desc">View your or another user's profile, level, XP, and achievements.</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/rank</div>
+                        <div class="command-desc">Check your current level, XP progress, and ranking.</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/leaderboard</div>
+                        <div class="command-desc">See the top learners and gamers on the server.</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/achievements</div>
+                        <div class="command-desc">View all unlocked achievements inspired by Diane Keaton's films!</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/badges</div>
+                        <div class="command-desc">Display your collection of earned badges and rewards.</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/stats</div>
+                        <div class="command-desc">See detailed statistics about your learning and gaming activity.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="command-category">
+                <div class="category-title">⚙️ UTILITY & SETTINGS</div>
+                <div class="command-list">
+                    <div class="command">
+                        <div class="command-name">/help</div>
+                        <div class="command-desc">Get a complete list of commands and how to use them.</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/settings</div>
+                        <div class="command-desc">Customize your experience - notifications, difficulty, themes, and more.</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/about</div>
+                        <div class="command-desc">Learn about Diane Keaton Bot and the memorial tribute.</div>
+                    </div>
+                    <div class="command">
+                        <div class="command-name">/invite</div>
+                        <div class="command-desc">Get the invite link to add me to other servers!</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="text-align: center; font-size: 1.1em; margin-top: 50px; color: var(--neon-purple); font-family: Orbitron; letter-spacing: 2px;">
+                💡 I'm constantly learning new commands! Type <strong>/help</strong> to see my latest capabilities.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="container">
+        <div style="background: rgba(5, 5, 16, 0.7); border: 3px solid var(--neon-pink); border-radius: 30px; padding: 80px 40px; text-align: center; box-shadow: 0 0 60px rgba(255, 0, 255, 0.4); margin: 80px 0;">
+            <h2 style="font-family: Orbitron; font-size: 3em; color: var(--neon-pink); text-shadow: 0 0 30px var(--neon-pink); margin-bottom: 30px;">
+                READY TO START LEARNING?
+            </h2>
+            <p style="font-size: 1.3em; line-height: 1.8; margin: 30px 0; opacity: 0.9;">
+                Add Diane Keaton Bot to your Discord server today!<br>
+                Get AI-powered tutoring, and access to 20 classic arcade games More Coming Soon.<br>
+                Honor Diane's legacy through education and joy.
+            </p>
+            <a href="https://discord.com/oauth2/authorize?client_id=1039406042796269590&permissions=2150688768&integration_type=0&scope=bot+applications.commands" 
+               class="invite-button" 
+               target="_blank"
+               style="margin-top: 30px;">
+                🚀 ADD TO DISCORD NOW
+            </a>
+            <p style="font-size: 1em; margin-top: 30px; opacity: 0.7;">
+                • 100% Free Forever – Diane Keaton is one of a kind and will never charge. • No premium tiers – every feature is available to everyone. • Always learning – she grows smarter and more capable with every interaction.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <h3>IN MEMORY OF DIANE KEATON</h3>
+        <p>January 5, 1946 - October 11, 2025 Forever in Our Hearts</p>
+        <p>Academy Award Winner • Director • Fashion Icon • Legend</p>
+        <p style="margin-top: 30px; font-size: 1.1em; max-width: 800px; margin-left: auto; margin-right: auto;">
+            "This bot honors Diane's passion for learning, teaching, and bringing joy to others.<br>
+            Through AI-powered education and classic gaming, her spirit of curiosity and fun lives on."
+        </p>
+        
+        <div class="footer-links">
+             <a href="#games" class="footer-link">GAMES</a>
+             <a href="#achievements" class="footer-link">ACHIEVEMENTS</a>
+             <a href="leaderboard.html" class="footer-link">LEADERBOARD</a>
+             <a href="TermsofService.html" class="footer-link">TERMS</a>
+            <a href="PrivacyPolicy.html" class="footer-link">PRIVACY</a>
+             <a href="profile.html" class="footer-link">PROFILE</a>
+            <a href="movies.html" class="footer-link">MOVIES 🎬</a>
+            <a href="https://discord.gg/jR8tcWF" class="footer-link" target="_blank">Game Killer Studios</a>
+           </div>
+        
+        <p style="margin-top: 40px; font-size: 0.9em; opacity: 0.6;">
+            © 2025 Diane Keaton Memorial Arcade • Powered by AI & Love<br>
+            Self-Learning AI • Educational Tool • Classic Game Preservation<br>
+            Created with ❤️ by Game Killers Studio™
+        </p>
+    </div>
+    
+    <script>
+    async function loadBotStats() {
+        try {
+            // Fetch real stats from your API
+            const response = await fetch('http://localhost:3000/api/bot/stats');
+            
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Update stats
+                document.getElementById('stat-level').textContent = '50';
+                document.getElementById('stat-achievements').textContent = '16/16';
+                document.getElementById('stat-xp').textContent = '999K';
+                document.getElementById('stat-rank').textContent = '#1';
+                document.getElementById('stat-games').textContent = data.gamesPlayed || '∞';
+                
+                // Update bot status (optional display)
+                console.log('Bot Stats:', data);
+            } else {
+                throw new Error('API not available');
+            }
+        } catch (error) {
+            console.log('Using default stats:', error.message);
+            // Default stats if API unavailable
+            document.getElementById('stat-level').textContent = '50';
+            document.getElementById('stat-achievements').textContent = '16/16';
+            document.getElementById('stat-xp').textContent = '999K';
+            document.getElementById('stat-rank').textContent = '#1';
+            document.getElementById('stat-games').textContent = '∞';
+        }
+    }
+    
+    // Load stats on page load
+    loadBotStats();
+    
+    // Refresh stats every 60 seconds
+    setInterval(loadBotStats, 60000);
+</script>
+</body>
+</html>
